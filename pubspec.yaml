@@ -30,15 +30,6 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  riverpod:
-  shared_preferences:
-  sqflite:
-  intl:
-  flutter_local_notifications:
-  workmanager:
-  table_calendar:
-  flutter_localizations:
-    sdk: flutter
 
 dev_dependencies:
   flutter_test:
