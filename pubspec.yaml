@@ -30,6 +30,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_timer_countdown: ^1.0.7
 
 dev_dependencies:
   flutter_test:
