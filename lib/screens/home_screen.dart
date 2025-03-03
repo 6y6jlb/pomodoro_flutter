@@ -36,8 +36,9 @@ class HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Pomodoro timer'),
+        backgroundColor: Colors.green[400],
         actions: [
-          IconButton.filled(
+          IconButton(
             onPressed: () {
               Navigator.push(
                 context,
@@ -58,7 +59,10 @@ class HomeScreenState extends State<HomeScreen> {
                 ? TimerCountdown(
                   enableDescriptions: false,
                   format: getTimerFormat(),
-                  timeTextStyle: TextStyle(fontSize: 48, color: Colors.green[300]),
+                  timeTextStyle: TextStyle(
+                    fontSize: 48,
+                    color: Colors.green[300],
+                  ),
                   endTime: DateTime.now().add(
                     Duration(seconds: sessionDuration),
                   ),

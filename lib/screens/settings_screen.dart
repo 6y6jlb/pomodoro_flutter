@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pomodoro_flutter/screens/schedule_screen.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -7,10 +8,15 @@ class SettingsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Settings'),
+        backgroundColor: Colors.green[400],
+        title: const Text('Настройки'),
       ),
-      body: const Center(
-        child: Text('Settings will be added here.'),
+      body: Center(
+        child: Center(
+          child: ElevatedButton(onPressed: () {
+            Navigator.push(context, MaterialPageRoute(builder: (context) => const ScheduleScreen()));
+          }, child: const Text('Задать расписание')),
+        ),
       ),
     );
   }
