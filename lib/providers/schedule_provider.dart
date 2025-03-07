@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:pomodoro_flutter/models/time_period.dart';
-import 'schedule.dart';
+import 'package:pomodoro_flutter/utils/time_period.dart';
+import 'package:pomodoro_flutter/utils/settings_constant.dart';
+import '../models/schedule.dart';
 
 class ScheduleProvider with ChangeNotifier {
   Schedule _schedule = Schedule(
-    activeDaysOfWeek: [0, 1, 2, 3, 4], // Пн-Пт
+    activeDaysOfWeek: SettingsConstant.defaultActiveDayIndexes,
     exceptionsDays: [],
-    breakDuration: 300, // 5 минут
+    breakDuration: SettingsConstant.defaultBreakDuration,
+    sessionDuration: SettingsConstant.defaultSessionDuration,
     plannedTimeBreaks: [],
     activeTimePeriod: TimePeriod(
-      start: TimeOfDay(hour: 9, minute: 0),
-      end: TimeOfDay(hour: 17, minute: 0),
+      start: SettingsConstant.defaultStartTime,
+      end: SettingsConstant.defaultEndTime,
     ),
   );
 
@@ -43,6 +45,11 @@ class ScheduleProvider with ChangeNotifier {
 
   void updateBreakDuration(int newDuration) {
     _schedule = _schedule.updateBreakDuration(newDuration);
+    notifyListeners();
+  }
+
+  void updateSessionDuration(int newDuration) {
+    _schedule = _schedule.updateSessionDuration(newDuration);
     notifyListeners();
   }
 

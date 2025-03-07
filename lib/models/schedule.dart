@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:pomodoro_flutter/models/time_period.dart';
+import 'package:pomodoro_flutter/utils/time_period.dart';
 
 class Schedule {
   final List<int> activeDaysOfWeek;
@@ -8,6 +8,7 @@ class Schedule {
   final List<TimePeriod> plannedTimeBreaks;
   final TimePeriod activeTimePeriod;
   final int breakDuration;
+  final int sessionDuration;
 
   Schedule({
     required this.activeDaysOfWeek,
@@ -15,6 +16,7 @@ class Schedule {
     required this.breakDuration,
     required this.plannedTimeBreaks,
     required this.activeTimePeriod,
+    required this.sessionDuration,
   });
 
   bool isActiveNow() {
@@ -64,26 +66,11 @@ class Schedule {
   }
 
   Schedule addException(DateTime date) {
-    final newExceptions = List<DateTime>.from(exceptionsDays)..add(date);
-    return Schedule(
-      activeDaysOfWeek: activeDaysOfWeek,
-      exceptionsDays: newExceptions,
-      breakDuration: breakDuration,
-      plannedTimeBreaks: plannedTimeBreaks,
-      activeTimePeriod: activeTimePeriod,
-    );
+    return _copyWith(exceptionsDays: List<DateTime>.from(exceptionsDays)..add(date),);
   }
 
   Schedule removeException(DateTime date) {
-    final newExceptions =
-        exceptionsDays.where((e) => e.isAtSameMomentAs(date) == false).toList();
-    return Schedule(
-      activeDaysOfWeek: activeDaysOfWeek,
-      exceptionsDays: newExceptions,
-      breakDuration: breakDuration,
-      plannedTimeBreaks: plannedTimeBreaks,
-      activeTimePeriod: activeTimePeriod,
-    );
+    return _copyWith(exceptionsDays: exceptionsDays.where((e) => e.isAtSameMomentAs(date) == false).toList(),);
   }
 
   Schedule toggleActiveDay(int dayIndex) {
@@ -93,54 +80,44 @@ class Schedule {
     } else {
       newDays.add(dayIndex);
     }
-    return Schedule(
-      activeDaysOfWeek: newDays,
-      exceptionsDays: exceptionsDays,
-      breakDuration: breakDuration,
-      plannedTimeBreaks: plannedTimeBreaks,
-      activeTimePeriod: activeTimePeriod,
-    );
+    return _copyWith(activeDaysOfWeek: newDays,);
   }
 
   Schedule addBreak(TimePeriod breakTime) {
-    final newBreaks = List<TimePeriod>.from(plannedTimeBreaks)..add(breakTime);
-    return Schedule(
-      activeDaysOfWeek: activeDaysOfWeek,
-      exceptionsDays: exceptionsDays,
-      breakDuration: breakDuration,
-      plannedTimeBreaks: newBreaks,
-      activeTimePeriod: activeTimePeriod,
-    );
+    return _copyWith(plannedTimeBreaks: List<TimePeriod>.from(plannedTimeBreaks)..add(breakTime),);
   }
 
   Schedule removeBreak(TimePeriod breakTime) {
-    final newBreaks = plannedTimeBreaks.where((b) => b != breakTime).toList();
-    return Schedule(
-      activeDaysOfWeek: activeDaysOfWeek,
-      exceptionsDays: exceptionsDays,
-      breakDuration: breakDuration,
-      plannedTimeBreaks: newBreaks,
-      activeTimePeriod: activeTimePeriod,
-    );
+    return _copyWith(plannedTimeBreaks: plannedTimeBreaks.where((b) => b != breakTime).toList(),);
   }
 
   Schedule updateBreakDuration(int newDuration) {
-    return Schedule(
-      activeDaysOfWeek: activeDaysOfWeek,
-      exceptionsDays: exceptionsDays,
-      breakDuration: newDuration,
-      plannedTimeBreaks: plannedTimeBreaks,
-      activeTimePeriod: activeTimePeriod,
-    );
+    return _copyWith(breakDuration: newDuration,);
+  }
+
+    Schedule updateSessionDuration(int newDuration) {
+    return _copyWith(sessionDuration: newDuration,);
   }
 
   Schedule updateActiveTimePeriod(TimePeriod newActiveTimePeriod) {
+    return _copyWith(activeTimePeriod: newActiveTimePeriod,);
+  }
+
+  Schedule _copyWith({
+    List<int>? activeDaysOfWeek,
+    List<DateTime>? exceptionsDays,
+    TimePeriod? activeTimePeriod,
+    List<TimePeriod>? plannedTimeBreaks,
+    int? breakDuration,
+    int? sessionDuration,
+  }) {
     return Schedule(
-      activeDaysOfWeek: activeDaysOfWeek,
-      exceptionsDays: exceptionsDays,
-      breakDuration: breakDuration,
-      plannedTimeBreaks: plannedTimeBreaks,
-      activeTimePeriod: newActiveTimePeriod,
+      activeDaysOfWeek: activeDaysOfWeek ?? this.activeDaysOfWeek,
+      exceptionsDays: exceptionsDays ?? this.exceptionsDays,
+      breakDuration: breakDuration ?? this.breakDuration,
+      plannedTimeBreaks: plannedTimeBreaks ?? this.plannedTimeBreaks,
+      activeTimePeriod: activeTimePeriod ?? this.activeTimePeriod,
+      sessionDuration: sessionDuration ?? this.sessionDuration,
     );
   }
 }

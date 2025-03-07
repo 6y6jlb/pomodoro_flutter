@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:pomodoro_flutter/models/time_period.dart';
-import 'package:pomodoro_flutter/models/schedule_provider.dart';
+import 'package:pomodoro_flutter/utils/settings_constant.dart';
+import 'package:pomodoro_flutter/utils/time_period.dart';
+import 'package:pomodoro_flutter/providers/schedule_provider.dart';
 import 'package:time_range_picker/time_range_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
@@ -15,7 +16,10 @@ class ScheduleScreen extends StatefulWidget {
 class ScheduleScreenState extends State<ScheduleScreen> {
   final List<int> _daysOfWeekIndexes = [0, 1, 2, 3, 4, 5, 6];
 
-  void _removeException(DateTime value) => Provider.of<ScheduleProvider>(context, listen: false,).removeException(value);
+  void _removeException(DateTime value) => Provider.of<ScheduleProvider>(
+    context,
+    listen: false,
+  ).removeException(value);
 
   void _addException() {
     showDatePicker(
@@ -33,21 +37,36 @@ class ScheduleScreenState extends State<ScheduleScreen> {
     });
   }
 
-  void _updateActiveTimePeriod(TimePeriod newPeriod) => Provider.of<ScheduleProvider>(context, listen: false,).updateActiveTimePeriod(newPeriod);
+  void _updateActiveTimePeriod(TimePeriod newPeriod) =>
+      Provider.of<ScheduleProvider>(
+        context,
+        listen: false,
+      ).updateActiveTimePeriod(newPeriod);
 
-   void _updateBreakDuration(int newDuration) => Provider.of<ScheduleProvider>(context, listen: false,).updateBreakDuration(newDuration);
+  void _updateBreakDuration(int newDuration) => Provider.of<ScheduleProvider>(
+    context,
+    listen: false,
+  ).updateBreakDuration(newDuration);
 
-   void _toggleActiveDay(int dayIndex) => Provider.of<ScheduleProvider>(context, listen: false,).toggleActiveDay(dayIndex);
+  void _updateSessionDuration(int newDuration) =>
+      Provider.of<ScheduleProvider>(
+        context,
+        listen: false,
+      ).updateSessionDuration(newDuration);
+
+  void _toggleActiveDay(int dayIndex) => Provider.of<ScheduleProvider>(
+    context,
+    listen: false,
+  ).toggleActiveDay(dayIndex);
 
   @override
   Widget build(BuildContext context) {
-    final provider = Provider.of<ScheduleProvider>(context);
-    final schedule = provider.schedule;
+    final schedule = Provider.of<ScheduleProvider>(context).schedule;
 
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.green[400],
-        title: Text('Расписание')
+        title: Text('Расписание'),
       ),
       body: Padding(
         padding: EdgeInsets.all(20.0),
@@ -123,15 +142,28 @@ class ScheduleScreenState extends State<ScheduleScreen> {
               child: const Text("Указать период активности"),
             ),
             Text(
-              'Перервыв мин.: ${schedule.breakDuration ~/ 60}',
+              'Сессия длительность мин.: ${schedule.sessionDuration ~/ 60}',
+              style: TextStyle(fontSize: 18.8, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 8),
+            Slider(
+              value: schedule.sessionDuration.toDouble(),
+              min: SettingsConstant.minSessionDuration.toDouble(),
+              max: SettingsConstant.maxSessionDuration.toDouble(),
+               onChanged: (value) {
+                _updateSessionDuration(value.toInt());
+              },
+            ),
+            const SizedBox(height: 16),
+            Text(
+              'Перервыв длительность мин.: ${schedule.breakDuration ~/ 60}',
               style: TextStyle(fontSize: 18.8, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
             Slider(
               value: schedule.breakDuration.toDouble(),
-              min: 60, // 1 минут
-              max: 1800, // 30 минут
-              divisions: 12,
+              min: SettingsConstant.minBreakDuration.toDouble(),
+              max: SettingsConstant.maxBreakDuration.toDouble(),
               onChanged: (value) {
                 _updateBreakDuration(value.toInt());
               },

@@ -1,0 +1,1 @@
+enum PomodoroMode { standard, scheduleBased }

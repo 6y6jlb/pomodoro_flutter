@@ -1,11 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:pomodoro_flutter/models/schedule_provider.dart';
+import 'package:pomodoro_flutter/providers/notification_provider.dart';
+import 'package:pomodoro_flutter/providers/processing_provider.dart';
+import 'package:pomodoro_flutter/providers/schedule_provider.dart';
+import 'package:pomodoro_flutter/providers/settings_provider.dart';
 import 'package:pomodoro_flutter/screens/home_screen.dart';
+import 'package:pomodoro_flutter/widgets/glocal_snackbar_listener.dart';
 import 'package:provider/provider.dart';
 
 void main() {
+
+
+  final scheduleProvider = ScheduleProvider();
+
   runApp(MultiProvider(providers: [
-    ChangeNotifierProvider(create: (_) => ScheduleProvider()),
+    ChangeNotifierProvider(create: (_) => NotificationProvider()),
+    ChangeNotifierProvider(create: (_) => scheduleProvider),
+    ChangeNotifierProvider(create: (_) => SettingsProvider(scheduleProvider.schedule)),
+    ChangeNotifierProvider(create: (_) => ProcessingProvider()),
   ], 
   child: const App(),
   ));
@@ -31,7 +42,7 @@ class App extends StatelessWidget {
         ),
       ),
       themeMode: ThemeMode.system,
-      home: const HomeScreen(),
+      home: GlobalSnackbarListener(child: HomeScreen()),
     );
   }
 }
