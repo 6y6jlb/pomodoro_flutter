@@ -2,7 +2,6 @@ import 'package:pomodoro_flutter/models/schedule.dart';
 import 'package:pomodoro_flutter/utils/enums/pomodoro_mode.dart';
 import 'package:pomodoro_flutter/utils/settings_constant.dart';
 
-
 class PomodoroSettings {
   final PomodoroMode mode;
   final Schedule? schedule;
@@ -10,15 +9,18 @@ class PomodoroSettings {
   final int userBreakDuration;
 
   int get currentBreakDuration {
-    return mode == PomodoroMode.scheduleBased ? schedule?.breakDuration ?? userBreakDuration : userBreakDuration;
+    return mode == PomodoroMode.scheduleBased
+        ? schedule?.breakDuration ?? userBreakDuration
+        : userBreakDuration;
   }
 
- int get currentSessionDuration {
-    return mode == PomodoroMode.scheduleBased ? schedule?.sessionDuration ?? userSessionDuration : userSessionDuration;
+  int get currentSessionDuration {
+    return mode == PomodoroMode.scheduleBased
+        ? schedule?.sessionDuration ?? userSessionDuration
+        : userSessionDuration;
   }
 
-
-   bool get isActive {
+  bool get isActive {
     if (mode == PomodoroMode.scheduleBased) {
       return schedule?.isActiveNow() ?? false;
     }
@@ -39,7 +41,6 @@ class PomodoroSettings {
   PomodoroSettings updateUserSesstionDuration(int userSessionDuration) {
     return _copyWith(userSessionDuration: userSessionDuration);
   }
-
 
   PomodoroSettings updateSchedule(Schedule schedule) {
     return _copyWith(schedule: schedule);

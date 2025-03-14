@@ -16,6 +16,11 @@ class SettingsProvider with ChangeNotifier {
 
   PomodoroSettings get settings => _settings;
 
+    void updateFromSchedule(Schedule newSchedule) {
+    _settings = _settings.updateSchedule(newSchedule);
+    notifyListeners();
+  }
+
     void updateUserBreaknDuration(int userBreakDuration) {
     _settings = _settings.updateUserBreaknDuration(userBreakDuration);
     notifyListeners();

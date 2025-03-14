@@ -1,3 +1,5 @@
+// ignore_for_file: unused_import
+
 import 'package:flutter/material.dart';
 import 'package:flutter_timer_countdown/flutter_timer_countdown.dart';
 import 'package:pomodoro_flutter/models/pomodoro_settings.dart';
@@ -7,7 +9,6 @@ import 'package:pomodoro_flutter/providers/settings_provider.dart';
 import 'package:pomodoro_flutter/screens/settings_screen.dart';
 import 'package:pomodoro_flutter/utils/enums/pomodoro_mode.dart';
 import 'package:pomodoro_flutter/utils/enums/processing_state.dart';
-import 'package:pomodoro_flutter/widgets/mode_switcher.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -41,21 +42,14 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            
-            ModeSwitcher(context: context, settings: settings),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          _buildTimer(context, settings, processing),
 
-            const SizedBox(height: 20),
-
-            _buildTimer(context, settings, processing),
-
-            const SizedBox(height: 20),
-          ],
-        ),
+          const SizedBox(height: 20),
+        ],
       ),
     );
   }

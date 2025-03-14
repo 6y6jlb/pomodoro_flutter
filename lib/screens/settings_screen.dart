@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:pomodoro_flutter/providers/notification_provider.dart';
 import 'package:pomodoro_flutter/providers/settings_provider.dart';
-import 'package:pomodoro_flutter/screens/schedule_screen.dart';
 import 'package:pomodoro_flutter/utils/enums/pomodoro_mode.dart';
-import 'package:pomodoro_flutter/utils/settings_constant.dart';
-import 'package:pomodoro_flutter/widgets/mode_switcher.dart';
+import 'package:pomodoro_flutter/widgets/schedule_settings_widget.dart';
+import 'package:pomodoro_flutter/widgets/standart_settings_widget.dart';
 import 'package:provider/provider.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -18,64 +18,67 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget build(BuildContext context) {
     final settings = Provider.of<SettingsProvider>(context).settings;
 
+    String _getNotificationMessage(PomodoroMode mode) {
+      return 'Текущий режим: ${mode == PomodoroMode.scheduleBased ? "Расписание" : "Стандарт"}';
+    }
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.green[400],
         title: const Text('Настройки'),
       ),
-      body: Center(
+      body: Padding(
+        padding: const EdgeInsets.all(20),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Text(
-              'Сессия длительность мин.: ${settings.userSessionDuration ~/ 60}',
-              style: TextStyle(fontSize: 18.8, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 8),
-            Slider(
-              value: settings.userSessionDuration.toDouble(),
-              min: SettingsConstant.minSessionDuration.toDouble(),
-              max: SettingsConstant.maxSessionDuration.toDouble(),
-              onChanged: (value) {
-                Provider.of<SettingsProvider>(
-                  context,
-                  listen: false,
-                ).updateUserSesstionDuration(value.toInt());
-              },
-            ),
-            const SizedBox(height: 16),
-            Text(
-              'Перервыв длительность мин.: ${settings.userBreakDuration ~/ 60}',
-              style: TextStyle(fontSize: 18.8, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 8),
-            Slider(
-              value: settings.userBreakDuration.toDouble(),
-              min: SettingsConstant.minBreakDuration.toDouble(),
-              max: SettingsConstant.maxBreakDuration.toDouble(),
-              onChanged: (value) {
-                Provider.of<SettingsProvider>(
-                  context,
-                  listen: false,
-                ).updateUserBreaknDuration(value.toInt());
-              },
-            ),
-            const SizedBox(height: 16),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-              child: ModeSwitcher(context: context, settings: settings),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const ScheduleScreen(),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  'Режим работы:',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+                SizedBox(width: 10),
+                DropdownButton<String>(
+                  value: settings.mode.name,
+                  elevation: 16,
+                  style: TextStyle(
+                    color: Colors.green[700],
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
                   ),
-                );
-              },
-              child: const Text('Задать расписание'),
+                  underline: Container(height: 1, color: Colors.green[200]),
+                  onChanged: (String? value) {
+                    PomodoroMode newMode =
+                        value == PomodoroMode.scheduleBased.name
+                            ? PomodoroMode.scheduleBased
+                            : PomodoroMode.standard;
+                    Provider.of<SettingsProvider>(
+                      context,
+                      listen: false,
+                    ).updateMode(newMode);
+                    Provider.of<NotificationProvider>(
+                      context,
+                      listen: false,
+                    ).addNotification(_getNotificationMessage(newMode));
+                  },
+                  items:
+                      PomodoroMode.values.map<DropdownMenuItem<String>>((
+                        PomodoroMode pm,
+                      ) {
+                        return DropdownMenuItem<String>(
+                          value: pm.name,
+                          child: Text(pm.label()),
+                        );
+                      }).toList(),
+                ),
+              ],
             ),
+            const SizedBox(height: 16),
+            settings.mode == PomodoroMode.scheduleBased
+                ? ScheduleSettingsWidget()
+                : StandartSettingsWidget(),
           ],
         ),
       ),
