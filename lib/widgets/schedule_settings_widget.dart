@@ -198,23 +198,41 @@ class ScheduleSettingsWidget extends StatelessWidget {
           onPressed:
               schedule.exceptionsDays.isNotEmpty
                   ? () {
-                    showModalBottomSheet(
+                    showDialog(
                       context: context,
                       builder: (context) {
-                        return ListView.builder(
-                          itemCount: schedule.exceptionsDays.length,
-                          itemBuilder: (context, index) {
-                            DateTime exception = schedule.exceptionsDays[index];
-                            return ListTile(
-                              title: Text(
-                                DateFormat('yyyy-MM-dd').format(exception),
-                              ),
-                              trailing: IconButton(
-                                icon: const Icon(Icons.delete),
-                                onPressed: () => _removeException(exception),
-                              ),
-                            );
-                          },
+                        return AlertDialog.adaptive(
+                          title: Text('Исключения'),
+                          content: Consumer<ScheduleProvider>(
+                            builder: (context, scheduleProvider, _) {
+                              return Container(
+                                width: double.maxFinite,
+                                child: ListView.builder(
+                                  itemCount: scheduleProvider.schedule.exceptionsDays.length,
+                                  itemBuilder: (context, index) {
+                                    DateTime exception =
+                                        schedule.exceptionsDays[index];
+                                    return ListTile(
+                                      title: Text(
+                                        DateFormat('yyyy-MM-dd').format(exception),
+                                      ),
+                                      trailing: IconButton(
+                                        icon: const Icon(Icons.delete),
+                                        onPressed:
+                                            () => _removeException(exception),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              );
+                            }
+                          ),
+                          actions: <Widget>[
+                            TextButton(
+                              onPressed: () => Navigator.pop(context, 'OK'),
+                              child: const Text('OK'),
+                            ),
+                          ],
                         );
                       },
                     );
