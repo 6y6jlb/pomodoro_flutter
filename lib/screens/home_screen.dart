@@ -74,8 +74,7 @@ class _HomeScreenState extends State<HomeScreen> {
           const SizedBox(height: 8),
           Text('Перерыв: ${settings.currentBreakDuration ~/ 60} мин.'),
           const SizedBox(height: 8),
-          Text(isRunning ? 'Оставшееся время' : 'Таймер'),
-          SizedBox(height: 10),
+          Text(processing.state.label()),
           isRunning
               ? TimerCountdown(
                 enableDescriptions: false,

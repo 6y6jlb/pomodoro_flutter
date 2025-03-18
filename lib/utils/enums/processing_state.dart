@@ -14,3 +14,17 @@ enum ProcessingState {
     ];
   }
 }
+
+extension Label on ProcessingState {
+  String label() {
+    const labels = {
+      ProcessingState.activity: 'Активно',
+      ProcessingState.inactivity: 'Неактивно',
+      ProcessingState.longRest: 'Отдых',
+      ProcessingState.briefRest: 'Перерыв',
+      ProcessingState.restDelay: 'Перерыв отложен',
+    };
+    return labels[this] ?? 'Неактивно';
+  }
+}
+

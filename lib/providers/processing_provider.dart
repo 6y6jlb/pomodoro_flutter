@@ -31,4 +31,14 @@ class ProcessingProvider with ChangeNotifier {
     _processing = _processing.makeRestDelay();
     notifyListeners();
   }
+
+  void getNextProcessType() {
+    // check current pomodoro use type
+    // -
+    // if schedule based -> check it active or not
+    // if schefule active -> get next proccessing type based on current type and next break type(long, short, delay)
+    // if schedult inactive -> make inactive
+    // -
+    // if standart -> get next proccessing type based on current type(active->break->active(delay conditionally))
+  }
 }
