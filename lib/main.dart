@@ -11,12 +11,13 @@ void main() {
 
 
   final scheduleProvider = ScheduleProvider();
+  final settingsProvider = SettingsProvider(scheduleProvider.schedule);
 
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(create: (_) => NotificationProvider()),
     ChangeNotifierProvider(create: (_) => scheduleProvider),
-    ChangeNotifierProvider(create: (_) => SettingsProvider(scheduleProvider.schedule)),
-    ChangeNotifierProvider(create: (_) => ProcessingProvider()),
+    ChangeNotifierProvider(create: (_) => settingsProvider),
+    ChangeNotifierProvider(create: (_) => ProcessingProvider(settingsProvider)),
   ], 
   child: const App(),
   ));

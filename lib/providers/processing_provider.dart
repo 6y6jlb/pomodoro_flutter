@@ -1,9 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:pomodoro_flutter/models/pomodoro_settings.dart';
 import 'package:pomodoro_flutter/models/processing.dart';
 import 'package:pomodoro_flutter/utils/enums/processing_state.dart';
 
 class ProcessingProvider with ChangeNotifier {
   Processing _processing = Processing(state: ProcessingState.inactivity);
+  late PomodoroSettings settings;
+
+  ProcessingProvider(settings) {
+    _processing = Processing(
+      settings: settings,
+      state: ProcessingState.inactivity
+    );
+  }
 
   Processing get processing => _processing;
 

@@ -28,3 +28,25 @@ extension Label on ProcessingState {
   }
 }
 
+extension TypeCheck on ProcessingState {
+  bool isInactive() {
+    return this == ProcessingState.inactivity;
+  }
+
+  bool isActive() {
+    return this == ProcessingState.activity;
+  }
+
+  bool isbriefRest() {
+    return this == ProcessingState.briefRest;
+  }
+
+  bool isLongRest() {
+    return this == ProcessingState.longRest;
+  }
+
+  bool isResDelay() {
+    return this == ProcessingState.restDelay;
+  }
+}
+

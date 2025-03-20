@@ -8,7 +8,14 @@ class PomodoroSettings {
   final int userSessionDuration;
   final int userBreakDuration;
 
-  int get currentBreakDuration {
+  PomodoroSettings({
+    this.mode = PomodoroMode.standard,
+    this.schedule,
+    this.userSessionDuration = SettingsConstant.defaultSessionDuration,
+    this.userBreakDuration = SettingsConstant.defaultBreakDuration,
+  });
+
+    int get currentBreakDuration {
     return mode == PomodoroMode.scheduleBased
         ? schedule?.breakDuration ?? userBreakDuration
         : userBreakDuration;
@@ -26,13 +33,6 @@ class PomodoroSettings {
     }
     return true;
   }
-
-  PomodoroSettings({
-    this.mode = PomodoroMode.standard,
-    this.schedule,
-    this.userSessionDuration = SettingsConstant.defaultSessionDuration,
-    this.userBreakDuration = SettingsConstant.defaultBreakDuration,
-  });
 
   PomodoroSettings updateUserBreaknDuration(int userBreakDuration) {
     return _copyWith(userBreakDuration: userBreakDuration);
