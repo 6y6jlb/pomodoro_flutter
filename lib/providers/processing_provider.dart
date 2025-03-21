@@ -10,7 +10,7 @@ class ProcessingProvider with ChangeNotifier {
   ProcessingProvider(settings) {
     _processing = Processing(
       settings: settings,
-      state: ProcessingState.inactivity
+      state: ProcessingState.inactivity,
     );
   }
 
@@ -26,13 +26,8 @@ class ProcessingProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void makeBriefRest() {
-    _processing = _processing.makeBriefRest();
-    notifyListeners();
-  }
-
-  void makeLongfRest() {
-    _processing = _processing.makeLongfRest();
+  void makeRest() {
+    _processing = _processing.makeRest();
     notifyListeners();
   }
 

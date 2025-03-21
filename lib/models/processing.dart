@@ -16,12 +16,8 @@ class Processing {
     );
   }
 
-  Processing makeBriefRest() {
-    return _copyWith(state: ProcessingState.briefRest);
-  }
-
-  Processing makeLongfRest() {
-    return _copyWith(state: ProcessingState.longRest);
+  Processing makeRest() {
+    return _copyWith(state: ProcessingState.rest);
   }
 
   Processing makeRestDelay() {
@@ -39,21 +35,23 @@ class Processing {
   ProcessingState getNextProcessingState() {
     final currentProcessingState = this.state;
 
-    if(settings == null) {
+    if (settings == null) {
       return ProcessingState.inactivity;
     }
 
-    if(settings!.mode.isStandart()) {
-      return currentProcessingState.isActive() ? ProcessingState.inactivity : ProcessingState.activity;
-    } 
+    if (settings!.mode.isStandart()) {
+      return currentProcessingState.isActive()
+          ? ProcessingState.inactivity
+          : ProcessingState.activity;
+    }
 
-    if(settings!.mode.isScheduleBased()) {} 
+    if (settings!.mode.isScheduleBased()) {}
     // if schedule based -> check it active or not
     // if schefule active -> get next proccessing type based on current type and next break type(long, short, delay)
     // if schedult inactive -> make inactive
     // -
     // if standart -> get next proccessing type based on current type(active->break->active(delay conditionally))
 
-   return ProcessingState.inactivity;
+    return ProcessingState.inactivity;
   }
 }

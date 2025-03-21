@@ -1,14 +1,12 @@
 enum ProcessingState {
-  briefRest,
-  longRest,
+  rest,
   activity,
   inactivity,
   restDelay;
 
   static List<ProcessingState> hasTimer() {
     return [
-      ProcessingState.briefRest,
-      ProcessingState.longRest,
+      ProcessingState.rest,
       ProcessingState.activity,
       ProcessingState.restDelay,
     ];
@@ -20,8 +18,7 @@ extension Label on ProcessingState {
     const labels = {
       ProcessingState.activity: 'Активно',
       ProcessingState.inactivity: 'Неактивно',
-      ProcessingState.longRest: 'Отдых',
-      ProcessingState.briefRest: 'Перерыв',
+      ProcessingState.rest: 'Перерыв',
       ProcessingState.restDelay: 'Перерыв отложен',
     };
     return labels[this] ?? 'Неактивно';
@@ -35,14 +32,6 @@ extension TypeCheck on ProcessingState {
 
   bool isActive() {
     return this == ProcessingState.activity;
-  }
-
-  bool isbriefRest() {
-    return this == ProcessingState.briefRest;
-  }
-
-  bool isLongRest() {
-    return this == ProcessingState.longRest;
   }
 
   bool isResDelay() {
