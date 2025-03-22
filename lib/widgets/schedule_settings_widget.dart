@@ -59,24 +59,24 @@ class ScheduleSettingsWidget extends StatelessWidget {
       );
     }
 
-    void _updateBreakDuration(int newDuration) {
-      if (newDuration < SettingsConstant.minBreakDuration ||
-          newDuration > SettingsConstant.maxBreakDuration) {
+    void _updateBreakDurationInSeconds(int newDurationInSeconds) {
+      if (newDurationInSeconds < SettingsConstant.minBreakDurationInSeconds ||
+          newDurationInSeconds > SettingsConstant.maxBreakDurationInSeconds) {
         return;
       }
       _updateScheduleAndSettings(
-        (scheduleProvider) => scheduleProvider.updateBreakDuration(newDuration),
+        (scheduleProvider) => scheduleProvider.updateBreakDuration(newDurationInSeconds),
       );
     }
 
-    void _updateSessionDuration(int newDuration) {
-      if (newDuration < SettingsConstant.minSessionDuration ||
-          newDuration > SettingsConstant.maxSessionDuration) {
+    void _updateSessionDurationInSeconds(int newDurationInSeconds) {
+      if (newDurationInSeconds < SettingsConstant.minSessionDurationInSeconds ||
+          newDurationInSeconds > SettingsConstant.maxSessionDurationInSeconds) {
         return;
       }
       _updateScheduleAndSettings(
         (scheduleProvider) =>
-            scheduleProvider.updateSessionDuration(newDuration),
+            scheduleProvider.updateSessionDuration(newDurationInSeconds),
       );
     }
 
@@ -157,30 +157,30 @@ class ScheduleSettingsWidget extends StatelessWidget {
           child: const Text("Указать период активности"),
         ),
         Text(
-          'Сессия длительность мин.: ${schedule.sessionDuration ~/ 60}',
+          'Сессия длительность мин.: ${schedule.sessionDurationInSeconds ~/ 60}',
           style: TextStyle(fontSize: 18.8, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 8),
         Slider(
-          value: schedule.sessionDuration.toDouble(),
-          min: SettingsConstant.minSessionDuration.toDouble(),
-          max: SettingsConstant.maxSessionDuration.toDouble(),
+          value: schedule.sessionDurationInSeconds.toDouble(),
+          min: SettingsConstant.minSessionDurationInSeconds.toDouble(),
+          max: SettingsConstant.maxSessionDurationInSeconds.toDouble(),
           onChanged: (value) {
-            _updateSessionDuration(value.toInt());
+            _updateSessionDurationInSeconds(value.toInt());
           },
         ),
         const SizedBox(height: 16),
         Text(
-          'Перервыв длительность мин.: ${schedule.breakDuration ~/ 60}',
+          'Перервыв длительность мин.: ${schedule.breakDurationInSeconds ~/ 60}',
           style: TextStyle(fontSize: 18.8, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 8),
         Slider(
-          value: schedule.breakDuration.toDouble(),
-          min: SettingsConstant.minBreakDuration.toDouble(),
-          max: SettingsConstant.maxBreakDuration.toDouble(),
+          value: schedule.breakDurationInSeconds.toDouble(),
+          min: SettingsConstant.minBreakDurationInSeconds.toDouble(),
+          max: SettingsConstant.maxBreakDurationInSeconds.toDouble(),
           onChanged: (value) {
-            _updateBreakDuration(value.toInt());
+            _updateBreakDurationInSeconds(value.toInt());
           },
         ),
         const SizedBox(height: 16),
@@ -208,13 +208,19 @@ class ScheduleSettingsWidget extends StatelessWidget {
                               return Container(
                                 width: double.maxFinite,
                                 child: ListView.builder(
-                                  itemCount: scheduleProvider.schedule.exceptionsDays.length,
+                                  itemCount:
+                                      scheduleProvider
+                                          .schedule
+                                          .exceptionsDays
+                                          .length,
                                   itemBuilder: (context, index) {
                                     DateTime exception =
                                         schedule.exceptionsDays[index];
                                     return ListTile(
                                       title: Text(
-                                        DateFormat('yyyy-MM-dd').format(exception),
+                                        DateFormat(
+                                          'yyyy-MM-dd',
+                                        ).format(exception),
                                       ),
                                       trailing: IconButton(
                                         icon: const Icon(Icons.delete),
@@ -225,7 +231,7 @@ class ScheduleSettingsWidget extends StatelessWidget {
                                   },
                                 ),
                               );
-                            }
+                            },
                           ),
                           actions: <Widget>[
                             TextButton(

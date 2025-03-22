@@ -22,14 +22,14 @@ class StandartSettingsWidget extends StatelessWidget {
         ),
         const SizedBox(height: 16),
         Text(
-          'Сессия длительность мин.: ${settings.userSessionDuration ~/ 60}',
+          'Сессия длительность мин.: ${settings.userSessionDurationInSeconds ~/ 60}',
           style: TextStyle(fontSize: 18.8, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 8),
         Slider(
-          value: settings.userSessionDuration.toDouble(),
-          min: SettingsConstant.minSessionDuration.toDouble(),
-          max: SettingsConstant.maxSessionDuration.toDouble(),
+          value: settings.userSessionDurationInSeconds.toDouble(),
+          min: SettingsConstant.minSessionDurationInSeconds.toDouble(),
+          max: SettingsConstant.maxSessionDurationInSeconds.toDouble(),
           onChanged: (value) {
             Provider.of<SettingsProvider>(
               context,
@@ -39,14 +39,14 @@ class StandartSettingsWidget extends StatelessWidget {
         ),
         const SizedBox(height: 16),
         Text(
-          'Перервыв длительность мин.: ${settings.userBreakDuration ~/ 60}',
+          'Перервыв длительность мин.: ${settings.userBreakDurationInSeconds ~/ 60}',
           style: TextStyle(fontSize: 18.8, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 8),
         Slider(
-          value: settings.userBreakDuration.toDouble(),
-          min: SettingsConstant.minBreakDuration.toDouble(),
-          max: SettingsConstant.maxBreakDuration.toDouble(),
+          value: settings.userBreakDurationInSeconds.toDouble(),
+          min: SettingsConstant.minBreakDurationInSeconds.toDouble(),
+          max: SettingsConstant.maxBreakDurationInSeconds.toDouble(),
           onChanged: (value) {
             Provider.of<SettingsProvider>(
               context,

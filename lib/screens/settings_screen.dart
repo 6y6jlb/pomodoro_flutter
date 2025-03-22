@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:pomodoro_flutter/providers/notification_provider.dart';
 import 'package:pomodoro_flutter/providers/settings_provider.dart';
+import 'package:pomodoro_flutter/streams/global_notification_stream.dart';
 import 'package:pomodoro_flutter/utils/enums/pomodoro_mode.dart';
 import 'package:pomodoro_flutter/widgets/schedule_settings_widget.dart';
 import 'package:pomodoro_flutter/widgets/standart_settings_widget.dart';
@@ -19,7 +19,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final settings = Provider.of<SettingsProvider>(context).settings;
 
     String _getNotificationMessage(PomodoroMode mode) {
-      return 'Текущий режим: ${mode == PomodoroMode.scheduleBased ? "Расписание" : "Стандарт"}';
+      return 'Текущий режим: ${mode.label()}';
     }
 
     return Scaffold(
@@ -58,10 +58,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       context,
                       listen: false,
                     ).updateMode(newMode);
-                    Provider.of<NotificationProvider>(
-                      context,
-                      listen: false,
-                    ).addNotification(_getNotificationMessage(newMode));
+                    GlobalNotificationStream.addNotification(_getNotificationMessage(newMode));
                   },
                   items:
                       PomodoroMode.values.map<DropdownMenuItem<String>>((

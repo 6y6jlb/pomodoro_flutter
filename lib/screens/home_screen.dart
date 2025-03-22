@@ -1,5 +1,3 @@
-// ignore_for_file: unused_import
-
 import 'package:flutter/material.dart';
 import 'package:flutter_timer_countdown/flutter_timer_countdown.dart';
 import 'package:pomodoro_flutter/models/pomodoro_settings.dart';
@@ -7,7 +5,6 @@ import 'package:pomodoro_flutter/models/processing.dart';
 import 'package:pomodoro_flutter/providers/processing_provider.dart';
 import 'package:pomodoro_flutter/providers/settings_provider.dart';
 import 'package:pomodoro_flutter/screens/settings_screen.dart';
-import 'package:pomodoro_flutter/utils/enums/pomodoro_mode.dart';
 import 'package:pomodoro_flutter/utils/enums/processing_state.dart';
 import 'package:provider/provider.dart';
 
@@ -60,7 +57,7 @@ class _HomeScreenState extends State<HomeScreen> {
     Processing processing,
   ) {
     CountDownTimerFormat getTimerFormat() {
-      return settings.currentBreakDuration > 3600
+      return settings.currentBreakDurationInSeconds > 3600
           ? CountDownTimerFormat.hoursMinutesSeconds
           : CountDownTimerFormat.minutesSeconds;
     }
@@ -70,9 +67,11 @@ class _HomeScreenState extends State<HomeScreen> {
     return Center(
       child: Column(
         children: [
-          Text('Сессия: ${settings.currentSessionDuration ~/ 60} мин.'),
+          Text(
+            'Сессия: ${settings.currentSessionDurationInSeconds ~/ 60} мин.',
+          ),
           const SizedBox(height: 8),
-          Text('Перерыв: ${settings.currentBreakDuration ~/ 60} мин.'),
+          Text('Перерыв: ${settings.currentBreakDurationInSeconds ~/ 60} мин.'),
           const SizedBox(height: 8),
           Text(processing.state.label()),
           isRunning
@@ -84,7 +83,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   color: Colors.green[300],
                 ),
                 endTime: DateTime.now().add(
-                  Duration(seconds: settings.currentSessionDuration),
+                  Duration(seconds: processing.periodDurationInSeconds),
                 ),
                 onEnd: Provider.of<ProcessingProvider>(context).makeInactive,
               )

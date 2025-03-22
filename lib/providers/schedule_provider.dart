@@ -7,8 +7,8 @@ class ScheduleProvider with ChangeNotifier {
   Schedule _schedule = Schedule(
     activeDaysOfWeek: SettingsConstant.defaultActiveDayIndexes,
     exceptionsDays: [],
-    breakDuration: SettingsConstant.defaultBreakDuration,
-    sessionDuration: SettingsConstant.defaultSessionDuration,
+    breakDurationInSeconds: SettingsConstant.defaultBreakDurationInSeconds,
+    sessionDurationInSeconds: SettingsConstant.defaultSessionDurationInSeconds,
     plannedTimeBreaks: [],
     activeTimePeriod: TimePeriod(
       start: SettingsConstant.defaultStartTime,
@@ -44,12 +44,12 @@ class ScheduleProvider with ChangeNotifier {
   }
 
   void updateBreakDuration(int newDuration) {
-    _schedule = _schedule.updateBreakDuration(newDuration);
+    _schedule = _schedule.updateBreakDurationInSeconds(newDuration);
     notifyListeners();
   }
 
   void updateSessionDuration(int newDuration) {
-    _schedule = _schedule.updateSessionDuration(newDuration);
+    _schedule = _schedule.updateSessionDurationInSeconds(newDuration);
     notifyListeners();
   }
 

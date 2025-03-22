@@ -5,26 +5,28 @@ import 'package:pomodoro_flutter/utils/settings_constant.dart';
 class PomodoroSettings {
   final PomodoroMode mode;
   final Schedule? schedule;
-  final int userSessionDuration;
-  final int userBreakDuration;
+  final int userSessionDurationInSeconds;
+  final int userBreakDurationInSeconds;
 
   PomodoroSettings({
     this.mode = PomodoroMode.standard,
     this.schedule,
-    this.userSessionDuration = SettingsConstant.defaultSessionDuration,
-    this.userBreakDuration = SettingsConstant.defaultBreakDuration,
+    this.userSessionDurationInSeconds =
+        SettingsConstant.defaultSessionDurationInSeconds,
+    this.userBreakDurationInSeconds =
+        SettingsConstant.defaultBreakDurationInSeconds,
   });
 
-    int get currentBreakDuration {
+  int get currentBreakDurationInSeconds {
     return mode == PomodoroMode.scheduleBased
-        ? schedule?.breakDuration ?? userBreakDuration
-        : userBreakDuration;
+        ? schedule?.breakDurationInSeconds ?? userBreakDurationInSeconds
+        : userBreakDurationInSeconds;
   }
 
-  int get currentSessionDuration {
+  int get currentSessionDurationInSeconds {
     return mode == PomodoroMode.scheduleBased
-        ? schedule?.sessionDuration ?? userSessionDuration
-        : userSessionDuration;
+        ? schedule?.sessionDurationInSeconds ?? userSessionDurationInSeconds
+        : userSessionDurationInSeconds;
   }
 
   bool get isActive {
@@ -35,11 +37,11 @@ class PomodoroSettings {
   }
 
   PomodoroSettings updateUserBreaknDuration(int userBreakDuration) {
-    return _copyWith(userBreakDuration: userBreakDuration);
+    return _copyWith(userBreakDurationInSeconds: userBreakDuration);
   }
 
   PomodoroSettings updateUserSesstionDuration(int userSessionDuration) {
-    return _copyWith(userSessionDuration: userSessionDuration);
+    return _copyWith(userSessionDurationInSeconds: userSessionDuration);
   }
 
   PomodoroSettings updateSchedule(Schedule schedule) {
@@ -53,14 +55,16 @@ class PomodoroSettings {
   PomodoroSettings _copyWith({
     PomodoroMode? mode,
     Schedule? schedule,
-    int? userSessionDuration,
-    int? userBreakDuration,
+    int? userSessionDurationInSeconds,
+    int? userBreakDurationInSeconds,
   }) {
     return PomodoroSettings(
       mode: mode ?? this.mode,
       schedule: schedule ?? this.schedule,
-      userSessionDuration: userSessionDuration ?? this.userSessionDuration,
-      userBreakDuration: userBreakDuration ?? this.userBreakDuration,
+      userSessionDurationInSeconds:
+          userSessionDurationInSeconds ?? this.userSessionDurationInSeconds,
+      userBreakDurationInSeconds:
+          userBreakDurationInSeconds ?? this.userBreakDurationInSeconds,
     );
   }
 }

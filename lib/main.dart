@@ -8,19 +8,22 @@ import 'package:pomodoro_flutter/widgets/glocal_snackbar_listener.dart';
 import 'package:provider/provider.dart';
 
 void main() {
-
-
   final scheduleProvider = ScheduleProvider();
   final settingsProvider = SettingsProvider(scheduleProvider.schedule);
 
-  runApp(MultiProvider(providers: [
-    ChangeNotifierProvider(create: (_) => NotificationProvider()),
-    ChangeNotifierProvider(create: (_) => scheduleProvider),
-    ChangeNotifierProvider(create: (_) => settingsProvider),
-    ChangeNotifierProvider(create: (_) => ProcessingProvider(settingsProvider)),
-  ], 
-  child: const App(),
-  ));
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => NotificationProvider()),
+        ChangeNotifierProvider(create: (_) => scheduleProvider),
+        ChangeNotifierProvider(create: (_) => settingsProvider),
+        ChangeNotifierProvider(
+          create: (_) => ProcessingProvider(settingsProvider.settings),
+        ),
+      ],
+      child: const App(),
+    ),
+  );
 }
 
 class App extends StatelessWidget {

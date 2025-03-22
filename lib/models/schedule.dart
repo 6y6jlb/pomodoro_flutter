@@ -7,16 +7,16 @@ class Schedule {
   final List<DateTime> exceptionsDays;
   final List<TimePeriod> plannedTimeBreaks;
   final TimePeriod activeTimePeriod;
-  final int breakDuration;
-  final int sessionDuration;
+  final int breakDurationInSeconds;
+  final int sessionDurationInSeconds;
 
   Schedule({
     required this.activeDaysOfWeek,
     required this.exceptionsDays,
-    required this.breakDuration,
+    required this.breakDurationInSeconds,
     required this.plannedTimeBreaks,
     required this.activeTimePeriod,
-    required this.sessionDuration,
+    required this.sessionDurationInSeconds,
   });
 
   bool isActiveNow() {
@@ -66,11 +66,18 @@ class Schedule {
   }
 
   Schedule addException(DateTime date) {
-    return _copyWith(exceptionsDays: List<DateTime>.from(exceptionsDays)..add(date),);
+    return _copyWith(
+      exceptionsDays: List<DateTime>.from(exceptionsDays)..add(date),
+    );
   }
 
   Schedule removeException(DateTime date) {
-    return _copyWith(exceptionsDays: exceptionsDays.where((e) => e.isAtSameMomentAs(date) == false).toList(),);
+    return _copyWith(
+      exceptionsDays:
+          exceptionsDays
+              .where((e) => e.isAtSameMomentAs(date) == false)
+              .toList(),
+    );
   }
 
   Schedule toggleActiveDay(int dayIndex) {
@@ -80,27 +87,33 @@ class Schedule {
     } else {
       newDays.add(dayIndex);
     }
-    return _copyWith(activeDaysOfWeek: newDays,);
+    return _copyWith(activeDaysOfWeek: newDays);
   }
 
   Schedule addBreak(TimePeriod breakTime) {
-    return _copyWith(plannedTimeBreaks: List<TimePeriod>.from(plannedTimeBreaks)..add(breakTime),);
+    return _copyWith(
+      plannedTimeBreaks: List<TimePeriod>.from(plannedTimeBreaks)
+        ..add(breakTime),
+    );
   }
 
   Schedule removeBreak(TimePeriod breakTime) {
-    return _copyWith(plannedTimeBreaks: plannedTimeBreaks.where((b) => b != breakTime).toList(),);
+    return _copyWith(
+      plannedTimeBreaks:
+          plannedTimeBreaks.where((b) => b != breakTime).toList(),
+    );
   }
 
-  Schedule updateBreakDuration(int newDuration) {
-    return _copyWith(breakDuration: newDuration,);
+  Schedule updateBreakDurationInSeconds(int newDurationInSeconds) {
+    return _copyWith(breakDurationInSeconds: newDurationInSeconds);
   }
 
-    Schedule updateSessionDuration(int newDuration) {
-    return _copyWith(sessionDuration: newDuration,);
+  Schedule updateSessionDurationInSeconds(int newDurationInSeconds) {
+    return _copyWith(sessionDurationInSeconds: newDurationInSeconds);
   }
 
   Schedule updateActiveTimePeriod(TimePeriod newActiveTimePeriod) {
-    return _copyWith(activeTimePeriod: newActiveTimePeriod,);
+    return _copyWith(activeTimePeriod: newActiveTimePeriod);
   }
 
   Schedule _copyWith({
@@ -108,16 +121,18 @@ class Schedule {
     List<DateTime>? exceptionsDays,
     TimePeriod? activeTimePeriod,
     List<TimePeriod>? plannedTimeBreaks,
-    int? breakDuration,
-    int? sessionDuration,
+    int? breakDurationInSeconds,
+    int? sessionDurationInSeconds,
   }) {
     return Schedule(
       activeDaysOfWeek: activeDaysOfWeek ?? this.activeDaysOfWeek,
       exceptionsDays: exceptionsDays ?? this.exceptionsDays,
-      breakDuration: breakDuration ?? this.breakDuration,
+      breakDurationInSeconds:
+          breakDurationInSeconds ?? this.breakDurationInSeconds,
       plannedTimeBreaks: plannedTimeBreaks ?? this.plannedTimeBreaks,
       activeTimePeriod: activeTimePeriod ?? this.activeTimePeriod,
-      sessionDuration: sessionDuration ?? this.sessionDuration,
+      sessionDurationInSeconds:
+          sessionDurationInSeconds ?? this.sessionDurationInSeconds,
     );
   }
 }
