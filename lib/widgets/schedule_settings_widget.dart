@@ -14,21 +14,15 @@ class ScheduleSettingsWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final List<int> _daysOfWeekIndexes = [0, 1, 2, 3, 4, 5, 6];
-    final scheduleProvider = Provider.of<ScheduleProvider>(
-      context,
-      listen: false,
-    );
-    final settingsProvider = Provider.of<SettingsProvider>(
-      context,
-      listen: false,
-    );
+    final scheduleProvider = Provider.of<ScheduleProvider>(context, listen: false);
+    final settingsProvider = Provider.of<SettingsProvider>(context, listen: false);
     final schedule = scheduleProvider.schedule;
 
     void _updateScheduleAndSettings(
       void Function(ScheduleProvider) updateSchedule,
     ) {
       updateSchedule(scheduleProvider);
-      settingsProvider.updateFromSchedule(schedule);
+      settingsProvider.updateFromSchedule(scheduleProvider.schedule);
     }
 
     void _removeException(DateTime value) {
@@ -54,12 +48,11 @@ class ScheduleSettingsWidget extends StatelessWidget {
 
     void _updateActiveTimePeriod(TimePeriod newPeriod) {
       _updateScheduleAndSettings(
-        (scheduleProvider) =>
-            scheduleProvider.updateActiveTimePeriod(newPeriod),
+        (scheduleProvider) => scheduleProvider.updateActiveTimePeriod(newPeriod),
       );
     }
 
-    void _updateBreakDurationInSeconds(int newDurationInSeconds) {
+   void _updateBreakDurationInSeconds(int newDurationInSeconds) {
       if (newDurationInSeconds < SettingsConstant.minBreakDurationInSeconds ||
           newDurationInSeconds > SettingsConstant.maxBreakDurationInSeconds) {
         return;
@@ -75,8 +68,7 @@ class ScheduleSettingsWidget extends StatelessWidget {
         return;
       }
       _updateScheduleAndSettings(
-        (scheduleProvider) =>
-            scheduleProvider.updateSessionDuration(newDurationInSeconds),
+        (scheduleProvider) => scheduleProvider.updateSessionDuration(newDurationInSeconds),
       );
     }
 

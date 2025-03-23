@@ -17,8 +17,12 @@ void main() {
         ChangeNotifierProvider(create: (_) => NotificationProvider()),
         ChangeNotifierProvider(create: (_) => scheduleProvider),
         ChangeNotifierProvider(create: (_) => settingsProvider),
-        ChangeNotifierProvider(
+        ChangeNotifierProxyProvider<SettingsProvider, ProcessingProvider>(
           create: (_) => ProcessingProvider(settingsProvider.settings),
+          update: (context, settingsProvider, processingProvider) {
+            processingProvider?.updateSettings(settingsProvider.settings);
+            return processingProvider!;
+          },
         ),
       ],
       child: const App(),

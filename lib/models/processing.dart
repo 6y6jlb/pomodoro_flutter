@@ -29,33 +29,43 @@ class Processing {
   Processing makeRest() {
     return _copyWith(
       state: ProcessingState.rest,
-      periodDurationInSeconds:
-          settings?.currentBreakDurationInSeconds ??
-          SettingsConstant.defaultBreakDurationInSeconds,
+      periodDurationInSeconds: curentPeriodDurationInSeconds(
+        ProcessingState.rest,
+      ),
     );
   }
 
   Processing makeRestDelay() {
     return _copyWith(
       state: ProcessingState.restDelay,
-      periodDurationInSeconds:
-          SettingsConstant.defaultRestDelayDurationInSeconds, // TO:DO настройка
+      periodDurationInSeconds: curentPeriodDurationInSeconds(
+        ProcessingState.restDelay,
+      ),
     );
   }
 
   Processing makeActive() {
     return _copyWith(
       state: ProcessingState.activity,
-      periodDurationInSeconds:
-          settings?.currentSessionDurationInSeconds ??
-          SettingsConstant.defaultSessionDurationInSeconds,
+      periodDurationInSeconds: curentPeriodDurationInSeconds(
+        ProcessingState.activity,
+      ),
     );
   }
 
   Processing makeInactive() {
     return _copyWith(
       state: ProcessingState.inactivity,
-      periodDurationInSeconds: 0,
+      periodDurationInSeconds: curentPeriodDurationInSeconds(
+        ProcessingState.inactivity,
+      ),
+    );
+  }
+
+  Processing updateSettings(PomodoroSettings settings) {
+    return _copyWith(
+      settings: settings,
+      periodDurationInSeconds: curentPeriodDurationInSeconds(state),
     );
   }
 
@@ -69,5 +79,20 @@ class Processing {
     return currentProcessingState.isActive()
         ? ProcessingState.rest
         : ProcessingState.activity;
+  }
+
+  int curentPeriodDurationInSeconds(ProcessingState state) {
+    switch (state) {
+      case ProcessingState.activity:
+        return settings?.currentSessionDurationInSeconds ??
+            SettingsConstant.defaultSessionDurationInSeconds;
+      case ProcessingState.rest:
+        return settings?.currentBreakDurationInSeconds ??
+            SettingsConstant.defaultBreakDurationInSeconds;
+      case ProcessingState.restDelay:
+        return SettingsConstant.defaultRestDelayDurationInSeconds;
+      case ProcessingState.inactivity:
+        return 0;
+    }
   }
 }

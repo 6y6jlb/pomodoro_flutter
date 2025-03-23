@@ -30,7 +30,7 @@ class NotificationProvider with ChangeNotifier{
 
   @override
   void dispose() {
-    _notificationSubscription.cancel(); // Отменяем подписку при уничтожении
+    _notificationSubscription.cancel();
     super.dispose();
   }
 }

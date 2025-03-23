@@ -45,4 +45,9 @@ class ProcessingProvider with ChangeNotifier {
     GlobalNotificationStream.addNotification(_processing.state.label());
     notifyListeners();
   }
+
+  void updateSettings(PomodoroSettings settings) {
+    _processing = _processing.updateSettings(settings);
+    notifyListeners();
+  }
 }
