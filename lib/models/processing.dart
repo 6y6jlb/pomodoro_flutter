@@ -4,69 +4,23 @@ import 'package:pomodoro_flutter/utils/settings_constant.dart';
 
 class Processing {
   final ProcessingState state;
-  final int periodDurationInSeconds;
   final PomodoroSettings? settings;
 
-  Processing({
-    required this.state,
-    required this.periodDurationInSeconds,
-    this.settings,
-  });
+  Processing({required this.state, this.settings});
 
-  Processing _copyWith({
-    ProcessingState? state,
-    int? periodDurationInSeconds,
-    PomodoroSettings? settings,
-  }) {
+  Processing _copyWith({ProcessingState? state, PomodoroSettings? settings}) {
     return Processing(
       state: state ?? this.state,
-      periodDurationInSeconds:
-          periodDurationInSeconds ?? this.periodDurationInSeconds,
       settings: settings ?? this.settings,
     );
   }
 
-  Processing makeRest() {
-    return _copyWith(
-      state: ProcessingState.rest,
-      periodDurationInSeconds: curentPeriodDurationInSeconds(
-        ProcessingState.rest,
-      ),
-    );
+  Processing copyWithNewState(ProcessingState state) {
+    return _copyWith(state: state);
   }
 
-  Processing makeRestDelay() {
-    return _copyWith(
-      state: ProcessingState.restDelay,
-      periodDurationInSeconds: curentPeriodDurationInSeconds(
-        ProcessingState.restDelay,
-      ),
-    );
-  }
-
-  Processing makeActive() {
-    return _copyWith(
-      state: ProcessingState.activity,
-      periodDurationInSeconds: curentPeriodDurationInSeconds(
-        ProcessingState.activity,
-      ),
-    );
-  }
-
-  Processing makeInactive() {
-    return _copyWith(
-      state: ProcessingState.inactivity,
-      periodDurationInSeconds: curentPeriodDurationInSeconds(
-        ProcessingState.inactivity,
-      ),
-    );
-  }
-
-  Processing updateSettings(PomodoroSettings settings) {
-    return _copyWith(
-      settings: settings,
-      periodDurationInSeconds: curentPeriodDurationInSeconds(state),
-    );
+  Processing copyWithNewSettings(PomodoroSettings settings) {
+    return _copyWith(settings: settings);
   }
 
   ProcessingState getNextProcessingState() {
@@ -81,7 +35,7 @@ class Processing {
         : ProcessingState.activity;
   }
 
-  int curentPeriodDurationInSeconds(ProcessingState state) {
+  int get periodDurationInSeconds {
     switch (state) {
       case ProcessingState.activity:
         return settings?.currentSessionDurationInSeconds ??

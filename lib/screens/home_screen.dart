@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_timer_countdown/flutter_timer_countdown.dart';
 import 'package:pomodoro_flutter/models/pomodoro_settings.dart';
 import 'package:pomodoro_flutter/models/processing.dart';
 import 'package:pomodoro_flutter/providers/processing_provider.dart';
@@ -56,36 +55,41 @@ class _HomeScreenState extends State<HomeScreen> {
     PomodoroSettings settings,
     Processing processing,
   ) {
-    CountDownTimerFormat getTimerFormat() {
-      return settings.currentBreakDurationInSeconds > 3600
-          ? CountDownTimerFormat.hoursMinutesSeconds
-          : CountDownTimerFormat.minutesSeconds;
+    Stream<int> createTimerStream(int durationInSeconds) {
+      return Stream.periodic(
+        const Duration(seconds: 1),
+        (count) => durationInSeconds - count,
+      ).take(durationInSeconds + 1);
     }
-
-    final isRunning = ProcessingState.hasTimer().contains(processing.state);
 
     return Center(
       child: Column(
         children: [
-          Text(
-            'Сессия: ${settings.currentSessionDurationInSeconds ~/ 60} мин.',
-          ),
-          const SizedBox(height: 8),
+          Text('Сессия: ${settings.currentSessionDurationInSeconds ~/ 60} мин.',),
+          const SizedBox(height: 4),
           Text('Перерыв: ${settings.currentBreakDurationInSeconds ~/ 60} мин.'),
           const SizedBox(height: 8),
           Text(processing.state.label()),
-          isRunning
-              ? TimerCountdown(
-                enableDescriptions: false,
-                format: getTimerFormat(),
-                timeTextStyle: TextStyle(
-                  fontSize: 48,
-                  color: Colors.green[300],
-                ),
-                endTime: DateTime.now().add(
-                  Duration(seconds: processing.periodDurationInSeconds),
-                ),
-                onEnd: Provider.of<ProcessingProvider>(context).makeInactive,
+          processing.state.hasTimer()
+              ? StreamBuilder<int>(
+                stream: createTimerStream(processing.periodDurationInSeconds),
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData || snapshot.data == null) {
+                    return Text(
+                      '00:00',
+                      style: TextStyle(fontSize: 48, color: Colors.green[400]),
+                    );
+                  }
+
+                  final remainingSeconds = snapshot.data!;
+                  final minutes = remainingSeconds ~/ 60;
+                  final seconds = remainingSeconds % 60;
+
+                  return Text(
+                    '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}',
+                    style: TextStyle(fontSize: 48, color: Colors.green[300]),
+                  );
+                },
               )
               : Text(
                 '00:00',
@@ -97,7 +101,7 @@ class _HomeScreenState extends State<HomeScreen> {
             children: [
               ElevatedButton(
                 onPressed:
-                    isRunning
+                    processing.state.hasTimer()
                         ? null
                         : Provider.of<ProcessingProvider>(
                           context,
@@ -109,7 +113,7 @@ class _HomeScreenState extends State<HomeScreen> {
               const SizedBox(width: 20),
               ElevatedButton(
                 onPressed:
-                    isRunning
+                    processing.state.hasTimer()
                         ? Provider.of<ProcessingProvider>(context).makeInactive
                         : null,
                 child: const Text('Stop'),

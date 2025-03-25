@@ -3,13 +3,15 @@ enum ProcessingState {
   activity,
   inactivity,
   restDelay;
+}
 
-  static List<ProcessingState> hasTimer() {
+extension HasTime on ProcessingState {
+  bool hasTimer() {
     return [
       ProcessingState.rest,
       ProcessingState.activity,
       ProcessingState.restDelay,
-    ];
+    ].contains(this);
   }
 }
 
