@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class SettingsConstant {
   static const int defaultSessionDurationInSeconds = 10; // 25 минут
-  static const int defaultBreakDurationInSeconds = 10; // 5 минут
+  static const int defaultBreakDurationInSeconds = 12; // 5 минут
   static const int defaultRestDelayDurationInSeconds = 300; // 5 минут
 
   static const int minSessionDurationInSeconds = 300; // 5 минут

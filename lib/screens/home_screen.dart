@@ -58,42 +58,74 @@ class _HomeScreenState extends State<HomeScreen> {
     Stream<int> createTimerStream(int durationInSeconds) {
       return Stream.periodic(
         const Duration(seconds: 1),
-        (count) => durationInSeconds - count,
+        (count) => count,
       ).take(durationInSeconds + 1);
     }
 
     return Center(
       child: Column(
         children: [
-          Text('Сессия: ${settings.currentSessionDurationInSeconds ~/ 60} мин.',),
+          Text(
+            'Сессия: ${settings.currentSessionDurationInSeconds ~/ 60} мин.',
+            style: TextStyle(fontSize: 12, color: Colors.grey[500]),
+          ),
           const SizedBox(height: 4),
-          Text('Перерыв: ${settings.currentBreakDurationInSeconds ~/ 60} мин.'),
+          Text(
+            'Перерыв: ${settings.currentBreakDurationInSeconds ~/ 60} мин.',
+            style: TextStyle(fontSize: 12, color: Colors.grey[500]),
+          ),
           const SizedBox(height: 8),
-          Text(processing.state.label()),
+          Text(
+            processing.state.label(),
+            style: TextStyle(
+              fontSize: 20,
+              color: processing.state.colorLevel(),
+            ),
+          ),
           processing.state.hasTimer()
               ? StreamBuilder<int>(
+                key: ValueKey(processing.state),
                 stream: createTimerStream(processing.periodDurationInSeconds),
                 builder: (context, snapshot) {
                   if (!snapshot.hasData || snapshot.data == null) {
                     return Text(
                       '00:00',
-                      style: TextStyle(fontSize: 48, color: Colors.green[400]),
+                      style: TextStyle(
+                        fontSize: 48,
+                        color: processing.state.colorLevel(),
+                      ),
                     );
                   }
 
-                  final remainingSeconds = snapshot.data!;
-                  final minutes = remainingSeconds ~/ 60;
-                  final seconds = remainingSeconds % 60;
+                  final passedSeconds = snapshot.data ?? 0;
+
+                  if (passedSeconds == processing.periodDurationInSeconds) {
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      Provider.of<ProcessingProvider>(
+                        context,
+                        listen: false,
+                      ).makeNextPeriod();
+                    });
+                  }
+
+                  final remains =
+                      processing.periodDurationInSeconds - passedSeconds;
+                  final minutes = remains ~/ 60;
+                  final seconds = remains % 60;
 
                   return Text(
                     '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}',
-                    style: TextStyle(fontSize: 48, color: Colors.green[300]),
+                    style: TextStyle(fontSize: 48, color: processing.state.colorLevel(),
+                    ),
                   );
                 },
               )
               : Text(
                 '00:00',
-                style: TextStyle(fontSize: 48, color: Colors.green[400]),
+                style: TextStyle(
+                  fontSize: 48,
+                  color: processing.state.colorLevel(),
+                ),
               ),
           SizedBox(height: 10),
           Row(

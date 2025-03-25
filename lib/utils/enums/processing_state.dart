@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 enum ProcessingState {
   rest,
   activity,
@@ -24,6 +26,18 @@ extension Label on ProcessingState {
       ProcessingState.restDelay: 'Перерыв отложен',
     };
     return labels[this] ?? 'Неактивно';
+  }
+}
+
+extension ColorLevel on ProcessingState {
+  Color colorLevel() {
+    Map<ProcessingState, Color?> colorLevels = {
+      ProcessingState.activity: Colors.green[400],
+      ProcessingState.inactivity: Colors.grey[500],
+      ProcessingState.rest: Colors.blue[400],
+      ProcessingState.restDelay: Colors.blueGrey[800],
+    };
+    return colorLevels[this] ?? Colors.blueGrey;
   }
 }
 
