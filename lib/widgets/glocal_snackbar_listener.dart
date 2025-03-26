@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 class GlobalSnackbarListener extends StatefulWidget {
   final Widget child;
 
-  const GlobalSnackbarListener({Key? key, required this.child}) : super(key: key);
+  const GlobalSnackbarListener({super.key, required this.child});
 
   @override
   State<GlobalSnackbarListener> createState() => _GlobalSnackbarListenerState();
