@@ -1,11 +1,6 @@
 import 'package:flutter/material.dart';
 
-enum ProcessingState {
-  rest,
-  activity,
-  inactivity,
-  restDelay;
-}
+enum ProcessingState { rest, activity, inactivity, restDelay }
 
 extension HasTime on ProcessingState {
   bool hasTimer() {
@@ -35,7 +30,7 @@ extension ColorLevel on ProcessingState {
       ProcessingState.activity: Colors.green[400],
       ProcessingState.inactivity: Colors.grey[500],
       ProcessingState.rest: Colors.blue[400],
-      ProcessingState.restDelay: Colors.blueGrey[800],
+      ProcessingState.restDelay: Colors.deepPurple[300],
     };
     return colorLevels[this] ?? Colors.blueGrey;
   }
@@ -50,8 +45,11 @@ extension TypeCheck on ProcessingState {
     return this == ProcessingState.activity;
   }
 
-  bool isResDelay() {
+  bool isRestDelay() {
     return this == ProcessingState.restDelay;
   }
-}
 
+    bool isRest() {
+    return this == ProcessingState.rest;
+  }
+}

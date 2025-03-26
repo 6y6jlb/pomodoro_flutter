@@ -30,9 +30,13 @@ class Processing {
       return ProcessingState.inactivity;
     }
 
-    return currentProcessingState.isActive()
-        ? ProcessingState.rest
-        : ProcessingState.activity;
+    if (currentProcessingState.isRest()) {
+      return ProcessingState.activity;
+    } else if (currentProcessingState.isRestDelay()) {
+      return ProcessingState.rest;
+    } else {
+      return ProcessingState.rest;
+    }
   }
 
   int get periodDurationInSeconds {

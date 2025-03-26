@@ -16,4 +16,9 @@ class AppTextStyles {
   static const TextStyle body = TextStyle(fontSize: 16);
 
   static TextStyle caption = TextStyle(fontSize: 12, color: Colors.grey[500]);
+
+  static TextStyle action = TextStyle(
+    fontSize: 20,
+    fontWeight: FontWeight.w600,
+  );
 }
