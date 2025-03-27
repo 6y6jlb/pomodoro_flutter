@@ -6,6 +6,7 @@ import 'package:pomodoro_flutter/providers/settings_provider.dart';
 import 'package:pomodoro_flutter/screens/settings_screen.dart';
 import 'package:pomodoro_flutter/utils/app_text_styles.dart';
 import 'package:pomodoro_flutter/utils/enums/processing_state.dart';
+import 'package:pomodoro_flutter/widgets/animated_circle_times.dart';
 import 'package:pomodoro_flutter/widgets/timer_widget.dart';
 import 'package:provider/provider.dart';
 
@@ -69,15 +70,9 @@ class _HomeScreenState extends State<HomeScreen> {
             'Перерыв: ${settings.currentBreakDurationInSeconds ~/ 60} мин.',
             style: AppTextStyles.caption,
           ),
-          const SizedBox(height: 4),
-          Text(
-            processing.state.label(),
-            style: AppTextStyles.headline.copyWith(
-              color: processing.state.colorLevel(),
-            ),
-          ),
+          const SizedBox(height: 30),
           TimerWidget(),
-          SizedBox(height: 10),
+          SizedBox(height: 30),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -89,9 +84,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         listen: false,
                       ).makeRestDelay,
 
-                  child: Text('Отложить перерыв',
-                  style: AppTextStyles.action,
-                  ),
+                  child: Text('Отложить перерыв', style: AppTextStyles.action),
                 )
               else if (processing.state.isInactive())
                 ElevatedButton(
@@ -101,9 +94,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         listen: false,
                       ).makeActive,
 
-                  child: Text('Запуск',
-               style: AppTextStyles.action,
-                  ),
+                  child: Text('Запуск', style: AppTextStyles.action),
                 )
               else
                 ElevatedButton(
@@ -113,9 +104,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         listen: false,
                       ).makeRest,
 
-                  child: Text('Перерыв',
-                  style: AppTextStyles.action,
-                  ),
+                  child: Text('Перерыв', style: AppTextStyles.action),
                 ),
               const SizedBox(width: 20),
               ElevatedButton(

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class AppTextStyles {
-  static TextStyle timer = TextStyle(fontSize: 72, fontWeight: FontWeight.bold);
+  static TextStyle timer = TextStyle(fontSize: 64, fontWeight: FontWeight.bold);
 
   static TextStyle headline = TextStyle(
     fontSize: 24,
