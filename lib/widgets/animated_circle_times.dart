@@ -5,12 +5,16 @@ class AnimatedCircleTimer extends StatefulWidget {
   final int totalSeconds;
   final Color fillColor;
   final VoidCallback onTimerComplete;
+  final Widget? upperWidget;
+  final Widget? bottomWidget;
 
   const AnimatedCircleTimer({
     super.key,
     required this.totalSeconds,
     required this.fillColor,
     required this.onTimerComplete,
+    this.upperWidget,
+    this.bottomWidget,
   });
 
   @override
@@ -66,11 +70,10 @@ class _AnimatedCircleTimerState extends State<AnimatedCircleTimer>
 
   @override
   Widget build(BuildContext context) {
-    final remainingSeconds =
-        ((1 - _animation.value) * widget.totalSeconds).round();
+    final remainingSeconds = ((1 - _animation.value) * widget.totalSeconds).round();
     final formattedTime = _formatTime(remainingSeconds);
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
+    return Stack(
+      alignment: Alignment.center,
       children: [
         CustomPaint(
           size: const Size(200, 200),
@@ -80,6 +83,16 @@ class _AnimatedCircleTimerState extends State<AnimatedCircleTimer>
             timeText: formattedTime,
           ),
         ),
+        if (widget.upperWidget != null)
+          Positioned(
+            top: 16, // Расстояние от верхнего края круга
+            child: widget.upperWidget!,
+          ),
+        if (widget.bottomWidget != null)
+          Positioned(
+            bottom: 16,
+            child: widget.bottomWidget!,
+          ),
       ],
     );
   }

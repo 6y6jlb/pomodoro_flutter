@@ -45,81 +45,24 @@ class _HomeScreenState extends State<HomeScreen> {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          _buildTimer(context, settings, processing),
-
-          const SizedBox(height: 20),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildTimer(
-    BuildContext context,
-    PomodoroSettings settings,
-    Processing processing,
-  ) {
-    return Center(
-      child: Column(
-        children: [
-          Text(
-            'Сессия: ${settings.currentSessionDurationInSeconds ~/ 60} мин.',
-            style: AppTextStyles.caption,
-          ),
-          const SizedBox(height: 4),
-          Text(
-            'Перерыв: ${settings.currentBreakDurationInSeconds ~/ 60} мин.',
-            style: AppTextStyles.caption,
-          ),
-          const SizedBox(height: 30),
-          TimerWidget(),
-          SizedBox(height: 30),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              if (processing.state.isRest())
-                ElevatedButton(
-                  onPressed:
-                      Provider.of<ProcessingProvider>(
-                        context,
-                        listen: false,
-                      ).makeRestDelay,
-
-                  child: Text('Отложить перерыв', style: AppTextStyles.action),
-                )
-              else if (processing.state.isInactive())
-                ElevatedButton(
-                  onPressed:
-                      Provider.of<ProcessingProvider>(
-                        context,
-                        listen: false,
-                      ).makeActive,
-
-                  child: Text('Запуск', style: AppTextStyles.action),
-                )
-              else
-                ElevatedButton(
-                  onPressed:
-                      Provider.of<ProcessingProvider>(
-                        context,
-                        listen: false,
-                      ).makeRest,
-
-                  child: Text('Перерыв', style: AppTextStyles.action),
+          Center(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  'Сессия: ${settings.currentSessionDurationInSeconds ~/ 60} мин.',
+                  style: AppTextStyles.caption,
                 ),
-              const SizedBox(width: 20),
-              ElevatedButton(
-                onPressed:
-                    processing.state.hasTimer()
-                        ? Provider.of<ProcessingProvider>(context).makeInactive
-                        : null,
-                child: Text(
-                  'Стоп',
-                  style: AppTextStyles.action.copyWith(
-                    color: Colors.blueGrey[900],
-                  ),
+                const SizedBox(height: 4),
+                Text(
+                  'Перерыв: ${settings.currentBreakDurationInSeconds ~/ 60} мин.',
+                  style: AppTextStyles.caption,
                 ),
-              ),
-            ],
+                const SizedBox(height: 30),
+                TimerWidget(),
+              ],
+            ),
           ),
         ],
       ),

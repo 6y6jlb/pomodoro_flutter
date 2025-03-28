@@ -27,7 +27,7 @@ extension Label on ProcessingState {
 extension ColorLevel on ProcessingState {
   Color colorLevel() {
     Map<ProcessingState, Color?> colorLevels = {
-      ProcessingState.activity: Colors.green[400],
+      ProcessingState.activity: Colors.green[300],
       ProcessingState.inactivity: Colors.grey[500],
       ProcessingState.rest: Colors.blue[400],
       ProcessingState.restDelay: Colors.deepPurple[300],
@@ -49,7 +49,7 @@ extension TypeCheck on ProcessingState {
     return this == ProcessingState.restDelay;
   }
 
-    bool isRest() {
+  bool isRest() {
     return this == ProcessingState.rest;
   }
 }
