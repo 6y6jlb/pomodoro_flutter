@@ -5,6 +5,7 @@ import 'package:pomodoro_flutter/providers/processing_provider.dart';
 import 'package:pomodoro_flutter/providers/settings_provider.dart';
 import 'package:pomodoro_flutter/screens/settings_screen.dart';
 import 'package:pomodoro_flutter/utils/app_text_styles.dart';
+import 'package:pomodoro_flutter/utils/enums/pomodoro_mode.dart';
 import 'package:pomodoro_flutter/utils/enums/processing_state.dart';
 import 'package:pomodoro_flutter/widgets/animated_circle_times.dart';
 import 'package:pomodoro_flutter/widgets/timer_widget.dart';
@@ -50,6 +51,11 @@ class _HomeScreenState extends State<HomeScreen> {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                 Text(
+                  'Режим: ${settings.mode.label()}',
+                  style: AppTextStyles.caption,
+                ),
+                const SizedBox(height: 4),
                 Text(
                   'Сессия: ${settings.currentSessionDurationInSeconds ~/ 60} мин.',
                   style: AppTextStyles.caption,

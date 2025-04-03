@@ -1,12 +1,24 @@
+import 'package:hive_flutter/adapters.dart';
 import 'package:pomodoro_flutter/models/schedule.dart';
 import 'package:pomodoro_flutter/utils/enums/pomodoro_mode.dart';
 import 'package:pomodoro_flutter/utils/settings_constant.dart';
 
+part 'pomodoro_settings.g.dart';
+
+@HiveType(typeId: 2)
 class PomodoroSettings {
+  @HiveField(0)
   final PomodoroMode mode;
+
+  @HiveField(1)
   final Schedule? schedule;
+
+  @HiveField(2)
   final int userSessionDurationInSeconds;
+
+  @HiveField(3)
   final int userBreakDurationInSeconds;
+
 
   PomodoroSettings({
     this.mode = PomodoroMode.standard,

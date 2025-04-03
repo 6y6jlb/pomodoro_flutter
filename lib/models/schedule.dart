@@ -1,13 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
+import 'package:pomodoro_flutter/utils/settings_constant.dart';
 import 'package:pomodoro_flutter/utils/time_period.dart';
 
+part 'schedule.g.dart';
+
+@HiveType(typeId: 1)
 class Schedule {
+  @HiveField(0)
   final List<int> activeDaysOfWeek;
+
+  @HiveField(1)
   final List<DateTime> exceptionsDays;
+
+  @HiveField(2)
   final List<TimePeriod> plannedTimeBreaks;
+
+  @HiveField(3)
   final TimePeriod activeTimePeriod;
+
+  @HiveField(4)
   final int breakDurationInSeconds;
+
+  @HiveField(5)
   final int sessionDurationInSeconds;
 
   Schedule({
@@ -133,6 +149,21 @@ class Schedule {
       activeTimePeriod: activeTimePeriod ?? this.activeTimePeriod,
       sessionDurationInSeconds:
           sessionDurationInSeconds ?? this.sessionDurationInSeconds,
+    );
+  }
+
+  static Schedule initial() {
+    return new Schedule(
+      activeDaysOfWeek: SettingsConstant.defaultActiveDayIndexes,
+      exceptionsDays: [],
+      breakDurationInSeconds: SettingsConstant.defaultBreakDurationInSeconds,
+      sessionDurationInSeconds:
+          SettingsConstant.defaultSessionDurationInSeconds,
+      plannedTimeBreaks: [],
+      activeTimePeriod: TimePeriod(
+        start: SettingsConstant.defaultStartTime,
+        end: SettingsConstant.defaultEndTime,
+      ),
     );
   }
 }

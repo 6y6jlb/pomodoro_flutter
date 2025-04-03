@@ -1,15 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/adapters.dart';
+import 'package:pomodoro_flutter/models/pomodoro_settings.dart';
+import 'package:pomodoro_flutter/models/schedule.dart';
 import 'package:pomodoro_flutter/providers/notification_provider.dart';
 import 'package:pomodoro_flutter/providers/processing_provider.dart';
 import 'package:pomodoro_flutter/providers/schedule_provider.dart';
 import 'package:pomodoro_flutter/providers/settings_provider.dart';
 import 'package:pomodoro_flutter/screens/home_screen.dart';
+import 'package:pomodoro_flutter/utils/enums/pomodoro_mode_adapter.dart';
+import 'package:pomodoro_flutter/utils/time_period.dart';
 import 'package:pomodoro_flutter/widgets/glocal_snackbar_listener.dart';
 import 'package:provider/provider.dart';
 
-void main() {
+void main() async {
+  await Hive.initFlutter();
+  Hive.registerAdapter(PomodoroModeAdapter());
+  Hive.registerAdapter(TimePeriodAdapter());
+  Hive.registerAdapter(TimeOfDayAdapter());
+  Hive.registerAdapter(ScheduleAdapter());
+  Hive.registerAdapter(PomodoroSettingsAdapter());
+
+  await Hive.openBox('settings');
+
   final scheduleProvider = ScheduleProvider();
-  final settingsProvider = SettingsProvider(scheduleProvider.schedule);
+  final settingsProvider = SettingsProvider();
 
   runApp(
     MultiProvider(

@@ -20,7 +20,7 @@ class _GlobalSnackbarListenerState extends State<GlobalSnackbarListener> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(nextNotification),
-          duration: const Duration(seconds: 2),
+          duration: const Duration(seconds: 1),
         ),
       ).closed.then((_) {
         notificationProvider.removeNotification();

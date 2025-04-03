@@ -1,20 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:pomodoro_flutter/utils/time_period.dart';
-import 'package:pomodoro_flutter/utils/settings_constant.dart';
 import '../models/schedule.dart';
 
 class ScheduleProvider with ChangeNotifier {
-  Schedule _schedule = Schedule(
-    activeDaysOfWeek: SettingsConstant.defaultActiveDayIndexes,
-    exceptionsDays: [],
-    breakDurationInSeconds: SettingsConstant.defaultBreakDurationInSeconds,
-    sessionDurationInSeconds: SettingsConstant.defaultSessionDurationInSeconds,
-    plannedTimeBreaks: [],
-    activeTimePeriod: TimePeriod(
-      start: SettingsConstant.defaultStartTime,
-      end: SettingsConstant.defaultEndTime,
-    ),
-  );
+  Schedule _schedule = Schedule.initial();
 
   Schedule get schedule => _schedule;
 
