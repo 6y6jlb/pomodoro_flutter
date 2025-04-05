@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:pomodoro_flutter/models/pomodoro_settings.dart';
-import 'package:pomodoro_flutter/models/processing.dart';
 import 'package:pomodoro_flutter/providers/processing_provider.dart';
 import 'package:pomodoro_flutter/providers/settings_provider.dart';
 import 'package:pomodoro_flutter/screens/settings_screen.dart';
 import 'package:pomodoro_flutter/utils/app_text_styles.dart';
 import 'package:pomodoro_flutter/utils/enums/pomodoro_mode.dart';
-import 'package:pomodoro_flutter/utils/enums/processing_state.dart';
-import 'package:pomodoro_flutter/widgets/animated_circle_times.dart';
 import 'package:pomodoro_flutter/widgets/timer_widget.dart';
 import 'package:provider/provider.dart';
 

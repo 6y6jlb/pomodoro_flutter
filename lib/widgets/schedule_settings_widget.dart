@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:pomodoro_flutter/providers/schedule_provider.dart';
 import 'package:pomodoro_flutter/providers/settings_provider.dart';
 import 'package:pomodoro_flutter/utils/settings_constant.dart';
 import 'package:pomodoro_flutter/utils/time_period.dart';
@@ -13,25 +12,14 @@ class ScheduleSettingsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<int> _daysOfWeekIndexes = [0, 1, 2, 3, 4, 5, 6];
-    final scheduleProvider = Provider.of<ScheduleProvider>(context, listen: false);
-    final settingsProvider = Provider.of<SettingsProvider>(context, listen: false);
-    final schedule = scheduleProvider.schedule;
+    final List<int> daysOfWeekIndexes = [0, 1, 2, 3, 4, 5, 6];
+    final settingsProvider = Provider.of<SettingsProvider>(
+      context,
+      listen: false,
+    );
+    final schedule = settingsProvider.settings.schedule;
 
-    void _updateScheduleAndSettings(
-      void Function(ScheduleProvider) updateSchedule,
-    ) {
-      updateSchedule(scheduleProvider);
-      settingsProvider.updateFromSchedule(scheduleProvider.schedule);
-    }
-
-    void _removeException(DateTime value) {
-      _updateScheduleAndSettings(
-        (scheduleProvider) => scheduleProvider.removeException(value),
-      );
-    }
-
-    void _addException() {
+    void addException() {
       showDatePicker(
         context: context,
         initialDate: DateTime.now(),
@@ -39,44 +27,12 @@ class ScheduleSettingsWidget extends StatelessWidget {
         lastDate: DateTime.now().add(const Duration(days: 365)),
       ).then((value) {
         if (value != null) {
-          _updateScheduleAndSettings(
-            (scheduleProvider) => scheduleProvider.addException(value),
-          );
+          settingsProvider.addExceptionForSchedule(value);
         }
       });
     }
 
-    void _updateActiveTimePeriod(TimePeriod newPeriod) {
-      _updateScheduleAndSettings(
-        (scheduleProvider) => scheduleProvider.updateActiveTimePeriod(newPeriod),
-      );
-    }
 
-   void _updateBreakDurationInSeconds(int newDurationInSeconds) {
-      if (newDurationInSeconds < SettingsConstant.minBreakDurationInSeconds ||
-          newDurationInSeconds > SettingsConstant.maxBreakDurationInSeconds) {
-        return;
-      }
-      _updateScheduleAndSettings(
-        (scheduleProvider) => scheduleProvider.updateBreakDuration(newDurationInSeconds),
-      );
-    }
-
-    void _updateSessionDurationInSeconds(int newDurationInSeconds) {
-      if (newDurationInSeconds < SettingsConstant.minSessionDurationInSeconds ||
-          newDurationInSeconds > SettingsConstant.maxSessionDurationInSeconds) {
-        return;
-      }
-      _updateScheduleAndSettings(
-        (scheduleProvider) => scheduleProvider.updateSessionDuration(newDurationInSeconds),
-      );
-    }
-
-    void _toggleActiveDay(int dayIndex) {
-      _updateScheduleAndSettings(
-        (scheduleProvider) => scheduleProvider.toggleActiveDay(dayIndex),
-      );
-    }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -96,7 +52,7 @@ class ScheduleSettingsWidget extends StatelessWidget {
         Wrap(
           spacing: 8,
           children:
-              _daysOfWeekIndexes.map((i) {
+              daysOfWeekIndexes.map((i) {
                 return FilterChip(
                   label: Text(
                     DateFormat.E().format(
@@ -105,7 +61,7 @@ class ScheduleSettingsWidget extends StatelessWidget {
                   ),
                   selected: schedule.activeDaysOfWeek.contains(i),
                   onSelected: (isSelected) {
-                    _toggleActiveDay(i);
+                    settingsProvider.toggleActiveDayForSchedule(i);
                   },
                 );
               }).toList(),
@@ -135,12 +91,12 @@ class ScheduleSettingsWidget extends StatelessWidget {
               labelStyle: TextStyle(color: Colors.amber),
               ticks: 24,
               onStartChange: (start) {
-                _updateActiveTimePeriod(
+                settingsProvider.updateActiveTimePeriodForSchedule(
                   TimePeriod(start: start, end: schedule.activeTimePeriod.end),
                 );
               },
               onEndChange: (end) {
-                _updateActiveTimePeriod(
+                settingsProvider.updateActiveTimePeriodForSchedule(
                   TimePeriod(start: schedule.activeTimePeriod.start, end: end),
                 );
               },
@@ -158,7 +114,7 @@ class ScheduleSettingsWidget extends StatelessWidget {
           min: SettingsConstant.minSessionDurationInSeconds.toDouble(),
           max: SettingsConstant.maxSessionDurationInSeconds.toDouble(),
           onChanged: (value) {
-            _updateSessionDurationInSeconds(value.toInt());
+            settingsProvider.updateSessionDurationForSchedule(value.toInt());
           },
         ),
         const SizedBox(height: 16),
@@ -172,7 +128,7 @@ class ScheduleSettingsWidget extends StatelessWidget {
           min: SettingsConstant.minBreakDurationInSeconds.toDouble(),
           max: SettingsConstant.maxBreakDurationInSeconds.toDouble(),
           onChanged: (value) {
-            _updateBreakDurationInSeconds(value.toInt());
+            settingsProvider.updateBreakDurationForSchedule(value.toInt());
           },
         ),
         const SizedBox(height: 16),
@@ -182,7 +138,7 @@ class ScheduleSettingsWidget extends StatelessWidget {
         ),
         const SizedBox(height: 8),
         ElevatedButton(
-          onPressed: _addException,
+          onPressed: addException,
           child: const Text('Добавить исключинеие'),
         ),
         const SizedBox(height: 8),
@@ -195,16 +151,15 @@ class ScheduleSettingsWidget extends StatelessWidget {
                       builder: (context) {
                         return AlertDialog.adaptive(
                           title: Text('Исключения'),
-                          content: Consumer<ScheduleProvider>(
-                            builder: (context, scheduleProvider, _) {
-                              return Container(
+                          content: Consumer<SettingsProvider>(
+                            builder: (context, settingsProvider, _) {
+                              final schedule =
+                                  settingsProvider.settings.schedule;
+
+                              return SizedBox(
                                 width: double.maxFinite,
                                 child: ListView.builder(
-                                  itemCount:
-                                      scheduleProvider
-                                          .schedule
-                                          .exceptionsDays
-                                          .length,
+                                  itemCount: schedule.exceptionsDays.length,
                                   itemBuilder: (context, index) {
                                     DateTime exception =
                                         schedule.exceptionsDays[index];
@@ -217,7 +172,10 @@ class ScheduleSettingsWidget extends StatelessWidget {
                                       trailing: IconButton(
                                         icon: const Icon(Icons.delete),
                                         onPressed:
-                                            () => _removeException(exception),
+                                            () => settingsProvider
+                                                .removeExceptionForSchedule(
+                                                  exception,
+                                                ),
                                       ),
                                     );
                                   },

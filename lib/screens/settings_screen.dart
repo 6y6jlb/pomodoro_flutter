@@ -18,7 +18,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget build(BuildContext context) {
     final settings = Provider.of<SettingsProvider>(context).settings;
 
-    String _getNotificationMessage(PomodoroMode mode) {
+    String getNotificationMessage(PomodoroMode mode) {
       return 'Текущий режим: ${mode.label()}';
     }
 
@@ -58,7 +58,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       context,
                       listen: false,
                     ).updateMode(newMode);
-                    GlobalNotificationStream.addNotification(_getNotificationMessage(newMode));
+                    GlobalNotificationStream.addNotification(getNotificationMessage(newMode));
                   },
                   items:
                       PomodoroMode.values.map<DropdownMenuItem<String>>((

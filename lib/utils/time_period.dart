@@ -13,6 +13,7 @@ class TimePeriod {
 
   TimePeriod({required this.start, required this.end});
 
+  @override
   String toString() {
     return '${start.hour}:${start.minute}-${end.hour}:${end.minute}';
   }

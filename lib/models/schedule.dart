@@ -57,8 +57,8 @@ class Schedule {
   bool isActiveTime(DateTime date) {
     final timeOfDay = TimeOfDay.fromDateTime(date);
 
-    final activeStart = activeTimePeriod?.start;
-    final activeEnd = activeTimePeriod?.end;
+    final activeStart = activeTimePeriod.start;
+    final activeEnd = activeTimePeriod.end;
 
     if (activeStart == null || activeEnd == null) return true;
 
@@ -82,13 +82,13 @@ class Schedule {
   }
 
   Schedule addException(DateTime date) {
-    return _copyWith(
+    return copyWith(
       exceptionsDays: List<DateTime>.from(exceptionsDays)..add(date),
     );
   }
 
   Schedule removeException(DateTime date) {
-    return _copyWith(
+    return copyWith(
       exceptionsDays:
           exceptionsDays
               .where((e) => e.isAtSameMomentAs(date) == false)
@@ -103,36 +103,36 @@ class Schedule {
     } else {
       newDays.add(dayIndex);
     }
-    return _copyWith(activeDaysOfWeek: newDays);
+    return copyWith(activeDaysOfWeek: newDays);
   }
 
   Schedule addBreak(TimePeriod breakTime) {
-    return _copyWith(
+    return copyWith(
       plannedTimeBreaks: List<TimePeriod>.from(plannedTimeBreaks)
         ..add(breakTime),
     );
   }
 
   Schedule removeBreak(TimePeriod breakTime) {
-    return _copyWith(
+    return copyWith(
       plannedTimeBreaks:
           plannedTimeBreaks.where((b) => b != breakTime).toList(),
     );
   }
 
   Schedule updateBreakDurationInSeconds(int newDurationInSeconds) {
-    return _copyWith(breakDurationInSeconds: newDurationInSeconds);
+    return copyWith(breakDurationInSeconds: newDurationInSeconds);
   }
 
   Schedule updateSessionDurationInSeconds(int newDurationInSeconds) {
-    return _copyWith(sessionDurationInSeconds: newDurationInSeconds);
+    return copyWith(sessionDurationInSeconds: newDurationInSeconds);
   }
 
   Schedule updateActiveTimePeriod(TimePeriod newActiveTimePeriod) {
-    return _copyWith(activeTimePeriod: newActiveTimePeriod);
+    return copyWith(activeTimePeriod: newActiveTimePeriod);
   }
 
-  Schedule _copyWith({
+  Schedule copyWith({
     List<int>? activeDaysOfWeek,
     List<DateTime>? exceptionsDays,
     TimePeriod? activeTimePeriod,
@@ -153,7 +153,7 @@ class Schedule {
   }
 
   static Schedule initial() {
-    return new Schedule(
+    return Schedule(
       activeDaysOfWeek: SettingsConstant.defaultActiveDayIndexes,
       exceptionsDays: [],
       breakDurationInSeconds: SettingsConstant.defaultBreakDurationInSeconds,

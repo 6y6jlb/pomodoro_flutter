@@ -2,7 +2,7 @@ enum PomodoroMode { standard, scheduleBased }
 
 extension Label on PomodoroMode {
   String label() {
-    return this.isScheduleBased() ? 'Расписание' : 'Пользовательский';
+    return isScheduleBased() ? 'Расписание' : 'Пользовательский';
   }
 }
 
@@ -12,6 +12,6 @@ extension TypeCheck on PomodoroMode {
   }
 
   bool isStandart() {
-    return !this.isScheduleBased();
+    return !isScheduleBased();
   }
 }

@@ -3,6 +3,7 @@ import 'package:hive/hive.dart';
 import 'package:pomodoro_flutter/models/pomodoro_settings.dart';
 import 'package:pomodoro_flutter/models/schedule.dart';
 import 'package:pomodoro_flutter/utils/enums/pomodoro_mode.dart';
+import 'package:pomodoro_flutter/utils/time_period.dart';
 
 class SettingsProvider with ChangeNotifier {
   late Box _box;
@@ -15,11 +16,6 @@ class SettingsProvider with ChangeNotifier {
 
   PomodoroSettings get settings => _settings;
 
-  void updateFromSchedule(Schedule newSchedule) {
-    _settings = _settings.updateSchedule(newSchedule);
-    _updateBoxDataAndNotifyListeners();
-  }
-
   void updateUserBreaknDuration(int userBreakDuration) {
     _settings = _settings.updateUserBreaknDuration(userBreakDuration);
     _updateBoxDataAndNotifyListeners();
@@ -30,7 +26,7 @@ class SettingsProvider with ChangeNotifier {
     _updateBoxDataAndNotifyListeners();
   }
 
-  void updateSchedule(Schedule schedule) {
+  void updateSchedule(Schedule? schedule) {
     _settings = _settings.updateSchedule(schedule);
     _updateBoxDataAndNotifyListeners();
   }
@@ -49,11 +45,55 @@ class SettingsProvider with ChangeNotifier {
     _updateBoxDataAndNotifyListeners();
   }
 
+  void _updateSchedule(Schedule Function(Schedule) updateFunction) {
+    _settings = _settings.updateSchedule(updateFunction(_settings.schedule));
+    _updateBoxDataAndNotifyListeners();
+  }
+
+  void addExceptionForSchedule(DateTime date) {
+    _updateSchedule((schedule) => schedule.addException(date));
+  }
+
+  void removeExceptionForSchedule(DateTime date) {
+    _updateSchedule((schedule) => schedule.removeException(date));
+  }
+
+  void toggleActiveDayForSchedule(int dayIndex) {
+    _updateSchedule((schedule) => schedule.toggleActiveDay(dayIndex));
+  }
+
+  void addBreakForSchedule(TimePeriod breakTime) {
+    _updateSchedule((schedule) => schedule.addBreak(breakTime));
+  }
+
+  void removeBreakForSchedule(TimePeriod breakTime) {
+    _updateSchedule((schedule) => schedule.removeBreak(breakTime));
+  }
+
+  void updateBreakDurationForSchedule(int newDuration) {
+    _updateSchedule(
+      (schedule) => schedule.updateBreakDurationInSeconds(newDuration),
+    );
+  }
+
+  void updateSessionDurationForSchedule(int newDuration) {
+    _updateSchedule(
+      (schedule) => schedule.updateSessionDurationInSeconds(newDuration),
+    );
+  }
+
+  void updateActiveTimePeriodForSchedule(TimePeriod newActiveTimePeriod) {
+    _updateSchedule(
+      (schedule) => schedule.updateActiveTimePeriod(newActiveTimePeriod),
+    );
+  }
+
   PomodoroSettings _loadSettings() {
     if (_box.containsKey('pomodoro_settings')) {
       return _box.get('pomodoro_settings') as PomodoroSettings;
     }
     return PomodoroSettings(
+      mode: PomodoroMode.standard,
       schedule: Schedule.initial(),
     );
   }

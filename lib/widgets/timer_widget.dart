@@ -13,7 +13,7 @@ class TimerWidget extends StatelessWidget {
     final processingProvider = Provider.of<ProcessingProvider>(context);
     final processing = processingProvider.processing;
 
-    Widget _buildBottomActionWidget() {
+    Widget buildBottomActionWidget() {
       return ElevatedButton(
         onPressed:
             processing.state.hasTimer()
@@ -30,7 +30,7 @@ class TimerWidget extends StatelessWidget {
       backgroundColor: processing.state.colorLevel(),
     );
 
-    Widget _buildUpperActionWidget() {
+    Widget buildUpperActionWidget() {
       TextStyle commonTextStyles = AppTextStyles.action.copyWith(
         color: Colors.white,
       );
@@ -59,8 +59,8 @@ class TimerWidget extends StatelessWidget {
       key: ValueKey(processing.state),
       totalSeconds: processing.periodDurationInSeconds,
       fillColor: processing.state.colorLevel(),
-      bottomWidget: _buildBottomActionWidget(),
-      upperWidget: _buildUpperActionWidget(),
+      bottomWidget: buildBottomActionWidget(),
+      upperWidget: buildUpperActionWidget(),
       onTimerComplete: () {
         Provider.of<ProcessingProvider>(
           context,

@@ -11,7 +11,7 @@ class PomodoroSettings {
   final PomodoroMode mode;
 
   @HiveField(1)
-  final Schedule? schedule;
+  final Schedule schedule;
 
   @HiveField(2)
   final int userSessionDurationInSeconds;
@@ -22,49 +22,49 @@ class PomodoroSettings {
 
   PomodoroSettings({
     this.mode = PomodoroMode.standard,
-    this.schedule,
+    Schedule? schedule,
     this.userSessionDurationInSeconds =
         SettingsConstant.defaultSessionDurationInSeconds,
     this.userBreakDurationInSeconds =
         SettingsConstant.defaultBreakDurationInSeconds,
-  });
+  }) : schedule = schedule ?? Schedule.initial();
 
   int get currentBreakDurationInSeconds {
     return mode == PomodoroMode.scheduleBased
-        ? schedule?.breakDurationInSeconds ?? userBreakDurationInSeconds
+        ? schedule.breakDurationInSeconds
         : userBreakDurationInSeconds;
   }
 
   int get currentSessionDurationInSeconds {
     return mode == PomodoroMode.scheduleBased
-        ? schedule?.sessionDurationInSeconds ?? userSessionDurationInSeconds
+        ? schedule.sessionDurationInSeconds
         : userSessionDurationInSeconds;
   }
 
   bool get isActive {
     if (mode == PomodoroMode.scheduleBased) {
-      return schedule?.isActiveNow() ?? false;
+      return schedule.isActiveNow();
     }
     return true;
   }
 
   PomodoroSettings updateUserBreaknDuration(int userBreakDuration) {
-    return _copyWith(userBreakDurationInSeconds: userBreakDuration);
+    return copyWith(userBreakDurationInSeconds: userBreakDuration);
   }
 
   PomodoroSettings updateUserSesstionDuration(int userSessionDuration) {
-    return _copyWith(userSessionDurationInSeconds: userSessionDuration);
+    return copyWith(userSessionDurationInSeconds: userSessionDuration);
   }
 
-  PomodoroSettings updateSchedule(Schedule schedule) {
-    return _copyWith(schedule: schedule);
+  PomodoroSettings updateSchedule(Schedule? schedule) {
+    return copyWith(schedule: schedule);
   }
 
   PomodoroSettings updateMode(PomodoroMode mode) {
-    return _copyWith(mode: mode);
+    return copyWith(mode: mode);
   }
 
-  PomodoroSettings _copyWith({
+  PomodoroSettings copyWith({
     PomodoroMode? mode,
     Schedule? schedule,
     int? userSessionDurationInSeconds,

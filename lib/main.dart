@@ -4,7 +4,6 @@ import 'package:pomodoro_flutter/models/pomodoro_settings.dart';
 import 'package:pomodoro_flutter/models/schedule.dart';
 import 'package:pomodoro_flutter/providers/notification_provider.dart';
 import 'package:pomodoro_flutter/providers/processing_provider.dart';
-import 'package:pomodoro_flutter/providers/schedule_provider.dart';
 import 'package:pomodoro_flutter/providers/settings_provider.dart';
 import 'package:pomodoro_flutter/screens/home_screen.dart';
 import 'package:pomodoro_flutter/utils/enums/pomodoro_mode_adapter.dart';
@@ -22,14 +21,13 @@ void main() async {
 
   await Hive.openBox('settings');
 
-  final scheduleProvider = ScheduleProvider();
+
   final settingsProvider = SettingsProvider();
 
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => NotificationProvider()),
-        ChangeNotifierProvider(create: (_) => scheduleProvider),
         ChangeNotifierProvider(create: (_) => settingsProvider),
         ChangeNotifierProxyProvider<SettingsProvider, ProcessingProvider>(
           create: (_) => ProcessingProvider(settingsProvider.settings),
