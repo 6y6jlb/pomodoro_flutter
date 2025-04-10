@@ -21,7 +21,6 @@ void main() async {
 
   await Hive.openBox('settings');
 
-
   final settingsProvider = SettingsProvider();
 
   runApp(

@@ -41,8 +41,9 @@ class Schedule {
   }
 
   bool isActiveDay(DateTime date) {
-    final dayOfWeek = DateFormat('EEE').format(date).toLowerCase();
-    if (!activeDaysOfWeek.contains(dayOfWeek)) {
+    print(activeDaysOfWeek);
+    print(date.weekday);
+    if (!activeDaysOfWeek.contains(date.weekday)) {
       return false;
     }
 

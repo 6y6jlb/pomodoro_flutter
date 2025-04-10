@@ -18,9 +18,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final settingsProvider = Provider.of<SettingsProvider>(context);
-    final processingProvider = Provider.of<ProcessingProvider>(context);
     final settings = settingsProvider.settings;
-    final processing = processingProvider.processing;
 
     return Scaffold(
       appBar: AppBar(
@@ -47,7 +45,12 @@ class _HomeScreenState extends State<HomeScreen> {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                 Text(
+                Text(
+                  'isActive: ${settings.isActive}',
+                  style: AppTextStyles.caption,
+                ),
+                const SizedBox(height: 4),
+                Text(
                   'Режим: ${settings.mode.label()}',
                   style: AppTextStyles.caption,
                 ),

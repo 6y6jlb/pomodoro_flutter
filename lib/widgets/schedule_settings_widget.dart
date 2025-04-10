@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pomodoro_flutter/providers/settings_provider.dart';
 import 'package:pomodoro_flutter/utils/settings_constant.dart';
 import 'package:pomodoro_flutter/utils/time_period.dart';
+import 'package:pomodoro_flutter/utils/week_helper.dart';
 import 'package:pomodoro_flutter/widgets/info_block_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
@@ -11,8 +12,7 @@ class ScheduleSettingsWidget extends StatelessWidget {
   const ScheduleSettingsWidget({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final List<int> daysOfWeekIndexes = [0, 1, 2, 3, 4, 5, 6];
+  Widget build(BuildContext context) {;
     final settingsProvider = Provider.of<SettingsProvider>(
       context,
       listen: false,
@@ -51,20 +51,19 @@ class ScheduleSettingsWidget extends StatelessWidget {
         SizedBox(height: 10),
         Wrap(
           spacing: 8,
-          children:
-              daysOfWeekIndexes.map((i) {
-                return FilterChip(
-                  label: Text(
-                    DateFormat.E().format(
-                      DateTime.now().add(Duration(days: i)),
-                    ),
-                  ),
-                  selected: schedule.activeDaysOfWeek.contains(i),
-                  onSelected: (isSelected) {
-                    settingsProvider.toggleActiveDayForSchedule(i);
-                  },
-                );
-              }).toList(),
+          children: List.generate(7, (index) {
+            return FilterChip(
+              label: Text(
+          DateFormat('EEE').format(
+            DateTime.now().add(Duration(days: (index - DateTime.now().weekday + 7) % 7)),
+          ),
+              ),
+              selected: schedule.activeDaysOfWeek.contains(index),
+              onSelected: (isSelected) {
+          settingsProvider.toggleActiveDayForSchedule(index);
+              },
+            );
+          }),
         ),
         const SizedBox(height: 16),
         Text(

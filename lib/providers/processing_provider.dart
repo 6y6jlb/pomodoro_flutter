@@ -6,9 +6,15 @@ import 'package:pomodoro_flutter/utils/enums/processing_state.dart';
 
 class ProcessingProvider with ChangeNotifier {
   Processing _processing = Processing(state: ProcessingState.inactivity);
-  late PomodoroSettings settings;
+  PomodoroSettings? settings;
 
-  ProcessingProvider(settings) {
+  ProcessingProvider([PomodoroSettings? settings]) {
+    if (settings != null) {
+      updateSettings(settings);
+    } else {
+     _processing = Processing(state: ProcessingState.inactivity);
+    }
+
     _processing = Processing(
       settings: settings,
       state: ProcessingState.inactivity,
@@ -41,8 +47,12 @@ class ProcessingProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void updateSettings(PomodoroSettings settings) {
-    _processing = _processing.copyWithNewSettings(settings);
+  void updateSettings(PomodoroSettings newSettings) {
+    settings = newSettings;
+    _processing = Processing(
+      settings: settings!,
+      state: ProcessingState.inactivity,
+    );
     notifyListeners();
   }
 

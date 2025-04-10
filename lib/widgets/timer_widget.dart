@@ -12,23 +12,30 @@ class TimerWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final processingProvider = Provider.of<ProcessingProvider>(context);
     final processing = processingProvider.processing;
+    final settings = processingProvider.settings;
+
+    ButtonStyle commonButtonStyles = ElevatedButton.styleFrom(
+      backgroundColor: processing.state.colorLevel(),
+    );
 
     Widget buildBottomActionWidget() {
       return ElevatedButton(
+        style: commonButtonStyles,
         onPressed:
             processing.state.hasTimer()
                 ? processingProvider.makeInactive
                 : null,
         child: Text(
           'Стоп',
-          style: AppTextStyles.action.copyWith(color: Colors.blueGrey[900]),
+          style: AppTextStyles.action.copyWith(
+            color:
+                processing.state.hasTimer()
+                    ? Colors.blueGrey[900]
+                    : Colors.white,
+          ),
         ),
       );
     }
-
-    ButtonStyle commonButtonStyles = ElevatedButton.styleFrom(
-      backgroundColor: processing.state.colorLevel(),
-    );
 
     Widget buildUpperActionWidget() {
       TextStyle commonTextStyles = AppTextStyles.action.copyWith(
@@ -43,7 +50,7 @@ class TimerWidget extends StatelessWidget {
       } else if (processing.state.isInactive()) {
         return ElevatedButton(
           style: commonButtonStyles,
-          onPressed: processingProvider.makeActive,
+          onPressed: settings!.isActive ? processingProvider.makeActive : null,
           child: Text('Запуск', style: commonTextStyles),
         );
       } else {

@@ -14,5 +14,5 @@ class SettingsConstant {
   static const TimeOfDay defaultStartTime = TimeOfDay(hour: 9, minute: 0);
   static const TimeOfDay defaultEndTime = TimeOfDay(hour: 17, minute: 0);
 
-  static const List<int> defaultActiveDayIndexes = [0, 1, 2, 3, 4];
+  static const List<int> defaultActiveDayIndexes = [DateTime.monday, DateTime.tuesday, DateTime.wednesday, DateTime.thursday, DateTime.friday];
 }

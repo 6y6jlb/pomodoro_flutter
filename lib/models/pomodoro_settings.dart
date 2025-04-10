@@ -19,7 +19,6 @@ class PomodoroSettings {
   @HiveField(3)
   final int userBreakDurationInSeconds;
 
-
   PomodoroSettings({
     this.mode = PomodoroMode.standard,
     Schedule? schedule,
