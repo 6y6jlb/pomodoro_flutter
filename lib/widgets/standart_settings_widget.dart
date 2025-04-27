@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pomodoro_flutter/providers/settings_provider.dart';
-import 'package:pomodoro_flutter/utils/settings_constant.dart';
+import 'package:pomodoro_flutter/utils/consts/settings_constant.dart';
 import 'package:pomodoro_flutter/widgets/info_block_widget.dart';
 import 'package:provider/provider.dart';
 

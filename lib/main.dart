@@ -6,8 +6,8 @@ import 'package:pomodoro_flutter/providers/notification_provider.dart';
 import 'package:pomodoro_flutter/providers/processing_provider.dart';
 import 'package:pomodoro_flutter/providers/settings_provider.dart';
 import 'package:pomodoro_flutter/screens/home_screen.dart';
-import 'package:pomodoro_flutter/utils/enums/pomodoro_mode_adapter.dart';
-import 'package:pomodoro_flutter/utils/time_period.dart';
+import 'package:pomodoro_flutter/enums/pomodoro_mode_adapter.dart';
+import 'package:pomodoro_flutter/utils/datetime/time_period.dart';
 import 'package:pomodoro_flutter/widgets/glocal_snackbar_listener.dart';
 import 'package:provider/provider.dart';
 

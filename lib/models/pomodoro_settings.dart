@@ -1,7 +1,7 @@
 import 'package:hive_flutter/adapters.dart';
 import 'package:pomodoro_flutter/models/schedule.dart';
-import 'package:pomodoro_flutter/utils/enums/pomodoro_mode.dart';
-import 'package:pomodoro_flutter/utils/settings_constant.dart';
+import 'package:pomodoro_flutter/enums/pomodoro_mode.dart';
+import 'package:pomodoro_flutter/utils/consts/settings_constant.dart';
 
 part 'pomodoro_settings.g.dart';
 

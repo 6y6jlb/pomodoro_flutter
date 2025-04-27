@@ -1,6 +1,6 @@
 import 'package:pomodoro_flutter/models/pomodoro_settings.dart';
-import 'package:pomodoro_flutter/utils/enums/processing_state.dart';
-import 'package:pomodoro_flutter/utils/settings_constant.dart';
+import 'package:pomodoro_flutter/enums/processing_state.dart';
+import 'package:pomodoro_flutter/utils/consts/settings_constant.dart';
 
 class Processing {
   final ProcessingState state;

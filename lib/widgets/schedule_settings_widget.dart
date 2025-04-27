@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:pomodoro_flutter/providers/settings_provider.dart';
-import 'package:pomodoro_flutter/utils/settings_constant.dart';
-import 'package:pomodoro_flutter/utils/time_period.dart';
-import 'package:pomodoro_flutter/utils/week_helper.dart';
+import 'package:pomodoro_flutter/utils/consts/settings_constant.dart';
+import 'package:pomodoro_flutter/utils/datetime/time_period.dart';
+import 'package:pomodoro_flutter/utils/datetime/week_helper.dart';
 import 'package:pomodoro_flutter/widgets/info_block_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';

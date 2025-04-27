@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pomodoro_flutter/providers/processing_provider.dart';
-import 'package:pomodoro_flutter/utils/app_text_styles.dart';
-import 'package:pomodoro_flutter/utils/enums/processing_state.dart';
+import 'package:pomodoro_flutter/utils/styles/app_text_styles.dart';
+import 'package:pomodoro_flutter/enums/processing_state.dart';
 import 'package:pomodoro_flutter/widgets/animated_circle_times.dart';
 import 'package:provider/provider.dart';
 
@@ -28,10 +28,7 @@ class TimerWidget extends StatelessWidget {
         child: Text(
           'Стоп',
           style: AppTextStyles.action.copyWith(
-            color:
-                processing.state.hasTimer()
-                    ? Colors.blueGrey[900]
-                    : Colors.white,
+            color: Colors.white,
           ),
         ),
       );

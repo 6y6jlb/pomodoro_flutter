@@ -1,6 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
-import 'package:pomodoro_flutter/providers/notification_provider.dart';
-import 'package:provider/provider.dart';
+import 'package:pomodoro_flutter/events/notification_events.dart';
+import 'package:pomodoro_flutter/streams/global_notification_stream.dart';
 
 class GlobalSnackbarListener extends StatefulWidget {
   final Widget child;
@@ -12,34 +14,33 @@ class GlobalSnackbarListener extends StatefulWidget {
 }
 
 class _GlobalSnackbarListenerState extends State<GlobalSnackbarListener> {
-  void _showNextSnackbar(BuildContext context) {
-    final notificationProvider = Provider.of<NotificationProvider>(context, listen: false);
-    final nextNotification = notificationProvider.nextNotification;
+late StreamSubscription<NotificationEvent> _notificationSubscription;
 
-    if (nextNotification != null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(nextNotification),
-          duration: const Duration(seconds: 1),
-        ),
-      ).closed.then((_) {
-        notificationProvider.removeNotification();
-        _showNextSnackbar(context);
+    @override
+    void initState() {
+      super.initState();
+      _notificationSubscription = GlobalNotificationStream.stream.listen((NotificationEvent event) {
+        _showSnackbar(event.message);
       });
     }
+
+  void _showSnackbar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        duration: const Duration(seconds: 2),
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    _notificationSubscription.cancel();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<NotificationProvider>(
-      builder: (context, notificationProvider, _) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          if (notificationProvider.nextNotification != null) {
-            _showNextSnackbar(context);
-          }
-        });
-        return widget.child;
-      },
-    );
+    return widget.child;
   }
 }

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:pomodoro_flutter/providers/processing_provider.dart';
 import 'package:pomodoro_flutter/providers/settings_provider.dart';
 import 'package:pomodoro_flutter/screens/settings_screen.dart';
-import 'package:pomodoro_flutter/utils/app_text_styles.dart';
-import 'package:pomodoro_flutter/utils/enums/pomodoro_mode.dart';
+import 'package:pomodoro_flutter/utils/styles/app_text_styles.dart';
+import 'package:pomodoro_flutter/enums/pomodoro_mode.dart';
 import 'package:pomodoro_flutter/widgets/timer_widget.dart';
 import 'package:provider/provider.dart';
 

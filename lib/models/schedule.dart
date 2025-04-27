@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
-import 'package:pomodoro_flutter/utils/settings_constant.dart';
-import 'package:pomodoro_flutter/utils/time_period.dart';
+import 'package:pomodoro_flutter/utils/consts/settings_constant.dart';
+import 'package:pomodoro_flutter/utils/datetime/time_period.dart';
 
 part 'schedule.g.dart';
 

@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import 'package:pomodoro_flutter/events/notification_events.dart';
+import 'package:pomodoro_flutter/factories/notification_factory.dart';
 import 'package:pomodoro_flutter/models/pomodoro_settings.dart';
 import 'package:pomodoro_flutter/models/schedule.dart';
-import 'package:pomodoro_flutter/utils/enums/pomodoro_mode.dart';
-import 'package:pomodoro_flutter/utils/time_period.dart';
+import 'package:pomodoro_flutter/enums/pomodoro_mode.dart';
+import 'package:pomodoro_flutter/streams/global_notification_stream.dart';
+import 'package:pomodoro_flutter/utils/datetime/time_period.dart';
 
 class SettingsProvider with ChangeNotifier {
   late Box _box;
@@ -34,15 +37,17 @@ class SettingsProvider with ChangeNotifier {
   void updateMode(PomodoroMode mode) {
     _settings = _settings.updateMode(mode);
     _updateBoxDataAndNotifyListeners();
+    _addNotification(NotificationFactory.createModeChangeEvent(mode.label()));
   }
 
   void toggleMode() {
-    _settings = _settings.updateMode(
-      _settings.mode == PomodoroMode.standard
-          ? PomodoroMode.scheduleBased
-          : PomodoroMode.standard,
-    );
+    final mode =
+        _settings.mode == PomodoroMode.standard
+            ? PomodoroMode.scheduleBased
+            : PomodoroMode.standard;
+    _settings = _settings.updateMode(mode);
     _updateBoxDataAndNotifyListeners();
+    _addNotification(NotificationFactory.createModeChangeEvent(mode.label()));
   }
 
   void _updateSchedule(Schedule Function(Schedule) updateFunction) {
@@ -101,5 +106,9 @@ class SettingsProvider with ChangeNotifier {
   void _updateBoxDataAndNotifyListeners() async {
     notifyListeners();
     await _box.put('pomodoro_settings', _settings);
+  }
+
+  void _addNotification(NotificationEvent event) {
+    GlobalNotificationStream.addNotification(event);
   }
 }

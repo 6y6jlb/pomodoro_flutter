@@ -1,36 +1,38 @@
 import 'dart:async';
-import 'dart:collection';
 
 import 'package:flutter/widgets.dart';
+import 'package:pomodoro_flutter/events/notification_events.dart';
+import 'package:pomodoro_flutter/services/notification_service.dart';
+import 'package:pomodoro_flutter/services/sound_service.dart';
 import 'package:pomodoro_flutter/streams/global_notification_stream.dart';
 
-class NotificationProvider with ChangeNotifier{
-  final Queue<String> _notifications = Queue();
-  late StreamSubscription<String> _notificationSubscription;
-
+class NotificationProvider with ChangeNotifier {
+  final NotificationService _notificationService = NotificationService();
+  final SoundService _soundService = SoundService();
 
   NotificationProvider() {
-    _notificationSubscription = GlobalNotificationStream.stream.listen((message) {
-      addNotification(message);
+    print('init povider');
+    _initServices();
+    _listenToGlobalStream();
+  }
+
+  Future<void> _initServices() async {
+    await _notificationService.init();
+  }
+
+  void _listenToGlobalStream() {
+    print('Subscribing to GlobalNotificationStream...');
+    GlobalNotificationStream.stream.listen((NotificationEvent event) {
+      print('Received event: ${event.type}, message: ${event.message}');
+      _handleNotificationEvent(event);
     });
   }
 
-  void addNotification(String message) {
-    _notifications.add(message);
-    notifyListeners();
-  }
-
-  void removeNotification() {
-    if(_notifications.isNotEmpty) {
-      _notifications.removeFirst();
+  void _handleNotificationEvent(NotificationEvent event) {
+    if (event.soundKey != null) {
+      _soundService.playSound(event.soundKey!);
     }
-  }
 
-  String? get nextNotification => _notifications.firstOrNull;
-
-  @override
-  void dispose() {
-    _notificationSubscription.cancel();
-    super.dispose();
+    _notificationService.showNotification(event.type, event.message);
   }
 }

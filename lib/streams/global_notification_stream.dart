@@ -1,13 +1,15 @@
 import 'dart:async';
 
+import 'package:pomodoro_flutter/events/notification_events.dart';
+
 class GlobalNotificationStream {
-  static final StreamController<String> _streamController = StreamController.broadcast();
+  static final StreamController<NotificationEvent> _streamController =
+      StreamController.broadcast();
 
+  static Stream<NotificationEvent> get stream => _streamController.stream;
 
-  static Stream<String> get stream => _streamController.stream;
-
-  static void addNotification(String message) {
-    _streamController.add(message);
+  static void addNotification(NotificationEvent event) {
+    _streamController.add(event);
   }
 
   static void dispose() {
