@@ -3,11 +3,10 @@ import 'package:audioplayers/audioplayers.dart';
 class SoundService {
   final AudioPlayer _audioPlayer = AudioPlayer();
 
-
   final Map<String, String> _soundMap = {
-    'toggle': 'assets/sounds/toggle.mp3',
-    'request': 'assets/sounds/request.mp3',
-    'default': 'assets/sounds/default.mp3',
+    'toggle': 'sounds/toggle.mp3',
+    'request': 'sounds/request.mp3',
+    'default': 'sounds/default.mp3',
   };
 
   Future<void> playSound(String soundKey) async {
@@ -23,5 +22,4 @@ class SoundService {
       print('Failed to play sound: $e');
     }
   }
-
 }

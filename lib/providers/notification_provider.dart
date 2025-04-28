@@ -10,8 +10,11 @@ class NotificationProvider with ChangeNotifier {
   final NotificationService _notificationService = NotificationService();
   final SoundService _soundService = SoundService();
 
+   final StreamController<NotificationEvent> _eventController =
+      StreamController.broadcast();
+  Stream<NotificationEvent> get eventStream => _eventController.stream;
+
   NotificationProvider() {
-    print('init povider');
     _initServices();
     _listenToGlobalStream();
   }
@@ -21,10 +24,9 @@ class NotificationProvider with ChangeNotifier {
   }
 
   void _listenToGlobalStream() {
-    print('Subscribing to GlobalNotificationStream...');
     GlobalNotificationStream.stream.listen((NotificationEvent event) {
-      print('Received event: ${event.type}, message: ${event.message}');
       _handleNotificationEvent(event);
+      _eventController.add(event);
     });
   }
 

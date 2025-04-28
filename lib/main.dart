@@ -8,7 +8,7 @@ import 'package:pomodoro_flutter/providers/settings_provider.dart';
 import 'package:pomodoro_flutter/screens/home_screen.dart';
 import 'package:pomodoro_flutter/enums/pomodoro_mode_adapter.dart';
 import 'package:pomodoro_flutter/utils/datetime/time_period.dart';
-import 'package:pomodoro_flutter/widgets/glocal_snackbar_listener.dart';
+import 'package:pomodoro_flutter/widgets/global_snackbar_listener.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
@@ -26,7 +26,12 @@ void main() async {
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => NotificationProvider()),
+        ChangeNotifierProvider(
+          create: (_) {
+            print('Creating NotificationProvider...');
+            return NotificationProvider();
+          },
+        ),
         ChangeNotifierProvider(create: (_) => settingsProvider),
         ChangeNotifierProxyProvider<SettingsProvider, ProcessingProvider>(
           create: (_) => ProcessingProvider(settingsProvider.settings),

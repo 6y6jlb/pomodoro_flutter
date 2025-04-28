@@ -59,7 +59,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       context,
                       listen: false,
                     ).updateMode(newMode);
-                    GlobalNotificationStream.addNotification(NotificationFactory.createModeChangeEvent(newMode.label()));
+                    GlobalNotificationStream.addNotification(NotificationFactory.createModeChangeEvent(message: newMode.label()));
                   },
                   items:
                       PomodoroMode.values.map<DropdownMenuItem<String>>((

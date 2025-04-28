@@ -2,35 +2,35 @@ import 'package:pomodoro_flutter/events/notification_events.dart';
 
 class NotificationFactory {
 
-static NotificationEvent createDefaultEvent(String message) {
+static NotificationEvent createDefaultEvent({String message = '', bool withSound = false}) {
     return NotificationEvent(
       type: 'default_event',
       message: message,
-      soundKey: 'default',
+      soundKey: withSound ? 'default' : null,
     );
   }
 
-  static NotificationEvent createModeChangeEvent(String newMode) {
+  static NotificationEvent createModeChangeEvent({String message = '', bool withSound = false}) {
     return NotificationEvent(
       type: 'mode_change',
-      message: 'Mode switched to $newMode',
-      soundKey: 'request',
+      message: 'Mode switched to $message',
+      soundKey: withSound ? 'request' : null,
     );
   }
 
-  static NotificationEvent createStatusUpdateEvent(String status) {
+  static NotificationEvent createStatusUpdateEvent({String message = '', bool withSound = false}) {
     return NotificationEvent(
       type: 'status_update',
-      message: 'Status updated: $status',
-      soundKey: 'toggle',
+      message: 'Status updated: $message',
+      soundKey: withSound ? 'request' : null,
     );
   }
 
-  static NotificationEvent createExceptionAddedEvent(DateTime date) {
+  static NotificationEvent createExceptionAddedEvent({DateTime? date, bool withSound = false}) {
     return NotificationEvent(
       type: 'exception_added',
-      message: 'Added exception for ${date.toIso8601String()}',
-      soundKey: 'default',
+      message: 'Added exception for ${(date ?? DateTime.now()).toIso8601String()}',
+      soundKey: withSound ? 'default' : null,
     );
   }
 }
