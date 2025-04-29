@@ -41,8 +41,6 @@ class Schedule {
   }
 
   bool isActiveDay(DateTime date) {
-    print(activeDaysOfWeek);
-    print(date.weekday);
     if (!activeDaysOfWeek.contains(date.weekday)) {
       return false;
     }
@@ -131,6 +129,46 @@ class Schedule {
 
   Schedule updateActiveTimePeriod(TimePeriod newActiveTimePeriod) {
     return copyWith(activeTimePeriod: newActiveTimePeriod);
+  }
+
+  DateTime nextPeriodStart() {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+
+    for (int i = 0; i < 7; i++) {
+      final candidateDay = today.add(Duration(days: i));
+      if (activeDaysOfWeek.contains(candidateDay.weekday) &&
+          !exceptionsDays.any((e) => _isSameDate(e, candidateDay))) {
+        return DateTime(
+          candidateDay.year,
+          candidateDay.month,
+          candidateDay.day,
+          activeTimePeriod.start!.hour,
+          activeTimePeriod.start!.minute,
+        );
+      }
+    }
+
+    throw Exception('No active days found in the schedule.');
+  }
+
+  bool _isSameDate(DateTime date1, DateTime date2) {
+    return date1.year == date2.year &&
+        date1.month == date2.month &&
+        date1.day == date2.day;
+  }
+
+  DateTime? currentPeriodEnd() {
+    final now = DateTime.now();
+    if (!isActiveNow()) return null;
+
+    return DateTime(
+      now.year,
+      now.month,
+      now.day,
+      activeTimePeriod.end!.hour,
+      activeTimePeriod.end!.minute,
+    );
   }
 
   Schedule copyWith({

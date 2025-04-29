@@ -19,10 +19,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget build(BuildContext context) {
     final settings = Provider.of<SettingsProvider>(context).settings;
 
-    String getNotificationMessage(PomodoroMode mode) {
-      return 'Текущий режим: ${mode.label()}';
-    }
-
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.green[400],

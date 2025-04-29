@@ -24,27 +24,27 @@ class ProcessingProvider with ChangeNotifier {
 
   Processing get processing => _processing;
 
-  void makeActive({bool withSound = false}) {
+  void makeActive({bool background = false}) {
     _processing = _processing.copyWithNewState(ProcessingState.activity);
-    GlobalNotificationStream.addNotification(NotificationFactory.createStatusUpdateEvent(message: _processing.state.label(), withSound: withSound));
+    GlobalNotificationStream.addNotification(NotificationFactory.createStatusUpdateEvent(message: _processing.state.label(), withSound: background));
     notifyListeners();
   }
 
-  void makeInactive({bool withSound = false}) {
+  void makeInactive({bool background = false}) {
     _processing = _processing.copyWithNewState(ProcessingState.inactivity);
-    GlobalNotificationStream.addNotification(NotificationFactory.createStatusUpdateEvent(message: _processing.state.label(), withSound: withSound));
+    GlobalNotificationStream.addNotification(NotificationFactory.createStatusUpdateEvent(message: _processing.state.label(), withSound: background));
     notifyListeners();
   }
 
-  void makeRest({bool withSound = false}) {
+  void makeRest({bool background = false}) {
     _processing = _processing.copyWithNewState(ProcessingState.rest);
-    GlobalNotificationStream.addNotification(NotificationFactory.createStatusUpdateEvent(message: _processing.state.label(), withSound: withSound));
+    GlobalNotificationStream.addNotification(NotificationFactory.createStatusUpdateEvent(message: _processing.state.label(), withSound: background));
     notifyListeners();
   }
 
-  void makeRestDelay({bool withSound = false}) {
+  void makeRestDelay({bool background = false}) {
     _processing = _processing.copyWithNewState(ProcessingState.restDelay);
-    GlobalNotificationStream.addNotification(NotificationFactory.createStatusUpdateEvent(message: _processing.state.label(), withSound: withSound));
+    GlobalNotificationStream.addNotification(NotificationFactory.createStatusUpdateEvent(message: _processing.state.label(), withSound: background));
     notifyListeners();
   }
 
@@ -57,11 +57,11 @@ class ProcessingProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void makeNextPeriod({bool withSound = false}) {
+  void makeNextPeriod({bool background = true}) {
     _processing = _processing.copyWithNewState(
       _processing.getNextProcessingState(),
     );
-    GlobalNotificationStream.addNotification(NotificationFactory.createDefaultEvent(message: _processing.state.label(), withSound: withSound));
+    GlobalNotificationStream.addNotification(NotificationFactory.createDefaultEvent(message: _processing.state.label(), withSound: background ));
     notifyListeners();
   }
 }

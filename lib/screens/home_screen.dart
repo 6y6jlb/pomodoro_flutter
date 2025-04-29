@@ -4,6 +4,7 @@ import 'package:pomodoro_flutter/providers/settings_provider.dart';
 import 'package:pomodoro_flutter/screens/settings_screen.dart';
 import 'package:pomodoro_flutter/utils/styles/app_text_styles.dart';
 import 'package:pomodoro_flutter/enums/pomodoro_mode.dart';
+import 'package:pomodoro_flutter/widgets/schedule_info_widget.dart';
 import 'package:pomodoro_flutter/widgets/timer_widget.dart';
 import 'package:provider/provider.dart';
 
@@ -46,14 +47,13 @@ class _HomeScreenState extends State<HomeScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  'isActive: ${settings.isActive}',
-                  style: AppTextStyles.caption,
-                ),
-                const SizedBox(height: 4),
-                Text(
                   'Режим: ${settings.mode.label()}',
                   style: AppTextStyles.caption,
                 ),
+                
+                const SizedBox(height: 4),
+                 if (settings.mode != PomodoroMode.standard)
+                  ScheduleInfoWidget(schedule: settings.schedule),
                 const SizedBox(height: 4),
                 Text(
                   'Сессия: ${settings.currentSessionDurationInSeconds ~/ 60} мин.',
