@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
+import 'package:pomodoro_flutter/exceptions/no_active_days_exception.dart';
 import 'package:pomodoro_flutter/utils/consts/settings_constant.dart';
 import 'package:pomodoro_flutter/utils/datetime/time_period.dart';
 
@@ -149,7 +150,7 @@ class Schedule {
       }
     }
 
-    throw Exception('No active days found in the schedule.');
+    throw NoActiveDaysException();
   }
 
   bool _isSameDate(DateTime date1, DateTime date2) {

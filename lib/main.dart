@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:pomodoro_flutter/models/pomodoro_settings.dart';
 import 'package:pomodoro_flutter/models/schedule.dart';
 import 'package:pomodoro_flutter/providers/notification_provider.dart';
@@ -22,6 +23,10 @@ void main() async {
   await Hive.openBox('settings');
 
   final settingsProvider = SettingsProvider();
+
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await initializeDateFormatting('ru_RU', null);
 
   runApp(
     MultiProvider(

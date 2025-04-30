@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:pomodoro_flutter/exceptions/no_active_days_exception.dart';
 import 'package:pomodoro_flutter/models/schedule.dart';
 import 'package:pomodoro_flutter/utils/styles/app_text_styles.dart';
 
@@ -24,11 +25,11 @@ class ScheduleInfoWidget extends StatelessWidget {
       try {
         final startTime = schedule.nextPeriodStart();
         return 'Начнется ${_formatDay(startTime)}, в ${_formatTime(startTime)}';
-      } catch (e) {
+      } on NoActiveDaysException {
         return 'Нет активных дней в расписании';
       }
     }
-    return '';
+    return '-';
   }
 
   String _formatTime(DateTime dateTime) {
@@ -40,15 +41,12 @@ class ScheduleInfoWidget extends StatelessWidget {
     return formatter.format(dateTime);
   }
 
- @override
+  @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Text(
-          _getScheduleStatus(schedule),
-          style: AppTextStyles.caption,
-        ),
+        Text(_getScheduleStatus(schedule), style: AppTextStyles.caption),
         const SizedBox(height: 4),
         Text(_getScheduleDetails(schedule), style: AppTextStyles.caption),
       ],
