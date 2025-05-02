@@ -38,29 +38,27 @@ class Schedule {
 
   bool isActiveNow() {
     final now = DateTime.now();
-    return isActiveDay(now) && isActiveTime(now);
+    return _isActiveDay(now) && _isActiveTime(now);
   }
 
-  bool isActiveDay(DateTime date) {
+  bool _isActiveDay(DateTime date) {
     if (!activeDaysOfWeek.contains(date.weekday)) {
       return false;
     }
 
-    for (var exception in exceptionsDays) {
-      if (exception.isAtSameMomentAs(date)) {
+    for (var exceptionDay in exceptionsDays) {
+      if (_isSameDate(exceptionDay, date)) {
         return false;
       }
     }
     return true;
   }
 
-  bool isActiveTime(DateTime date) {
+  bool _isActiveTime(DateTime date) {
     final timeOfDay = TimeOfDay.fromDateTime(date);
 
     final activeStart = activeTimePeriod.start;
     final activeEnd = activeTimePeriod.end;
-
-    if (activeStart == null || activeEnd == null) return true;
 
     if (!timeIsBetween(timeOfDay, activeStart, activeEnd)) return false;
 
