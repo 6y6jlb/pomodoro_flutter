@@ -1,8 +1,10 @@
 import 'package:pomodoro_flutter/events/notification_events.dart';
 
 class NotificationFactory {
-
-static NotificationEvent createDefaultEvent({String message = '', bool withSound = false}) {
+  static NotificationEvent createDefaultEvent({
+    String message = '',
+    bool withSound = false,
+  }) {
     return NotificationEvent(
       type: 'default_event',
       message: message,
@@ -10,7 +12,10 @@ static NotificationEvent createDefaultEvent({String message = '', bool withSound
     );
   }
 
-  static NotificationEvent createModeChangeEvent({String message = '', bool withSound = false}) {
+  static NotificationEvent createModeChangeEvent({
+    String message = '',
+    bool withSound = false,
+  }) {
     return NotificationEvent(
       type: 'mode_change',
       message: 'Mode switched to $message',
@@ -18,7 +23,10 @@ static NotificationEvent createDefaultEvent({String message = '', bool withSound
     );
   }
 
-  static NotificationEvent createStatusUpdateEvent({String message = '', bool withSound = false}) {
+  static NotificationEvent createStateUpdateEvent({
+    String message = '',
+    bool withSound = false,
+  }) {
     return NotificationEvent(
       type: 'status_update',
       message: 'Status updated: $message',
@@ -26,10 +34,14 @@ static NotificationEvent createDefaultEvent({String message = '', bool withSound
     );
   }
 
-  static NotificationEvent createExceptionAddedEvent({DateTime? date, bool withSound = false}) {
+  static NotificationEvent createExceptionAddedEvent({
+    DateTime? date,
+    bool withSound = false,
+  }) {
     return NotificationEvent(
       type: 'exception_added',
-      message: 'Added exception for ${(date ?? DateTime.now()).toIso8601String()}',
+      message:
+          'Added exception for ${(date ?? DateTime.now()).toIso8601String()}',
       soundKey: withSound ? 'default' : null,
     );
   }

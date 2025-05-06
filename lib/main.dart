@@ -31,12 +31,7 @@ void main() async {
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(
-          create: (_) {
-            print('Creating NotificationProvider...');
-            return NotificationProvider();
-          },
-        ),
+        ChangeNotifierProvider(create: (_) => NotificationProvider()),
         ChangeNotifierProvider(create: (_) => settingsProvider),
         ChangeNotifierProxyProvider<SettingsProvider, ProcessingProvider>(
           create: (_) => ProcessingProvider(settingsProvider.settings),

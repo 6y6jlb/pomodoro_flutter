@@ -4,6 +4,7 @@ class SettingsConstant {
   static const int defaultSessionDurationInSeconds = 1500; // 25 минут
   static const int defaultBreakDurationInSeconds = 300; // 5 минут
   static const int defaultRestDelayDurationInSeconds = 300; // 5 минут
+  static const int defaultRemaingDurationInSeconds = 5; // 5 секунд
 
   static const int minSessionDurationInSeconds = 60; // 5 минут
   static const int maxSessionDurationInSeconds = 7200; // 120 минут
