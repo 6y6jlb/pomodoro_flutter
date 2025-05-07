@@ -55,7 +55,7 @@ class ProcessingProvider with ChangeNotifier {
           ),
         );
         notifyListeners();
-      });
+      }, 'Пора сделать перерыв!');
     } else {
       handlerCb();
     }
@@ -77,9 +77,17 @@ class ProcessingProvider with ChangeNotifier {
 
   void _delayedHandler(
     VoidCallback confirmationCallback,
-    VoidCallback delayCallback,
+    VoidCallback cancellationCallback,
+    String message,
   ) {
-    GlobaDelayedActionStream.add(new DelayedActionEvent(type: 'todo', message: 'todo'));
+    GlobaDelayedActionStream.add(
+      DelayedActionEvent(
+        type: 'state_change',
+        message: message,
+        confirmationAction: confirmationCallback,
+        cancellationAction: cancellationCallback,
+      ),
+    );
     _remainingTime = SettingsConstant.defaultRemaingDurationInSeconds;
     _lazyConfirmationTimer
         ?.cancel(); // Отменяем предыдущий таймер, если он существует

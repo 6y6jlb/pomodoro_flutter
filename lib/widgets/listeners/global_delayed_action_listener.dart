@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:pomodoro_flutter/events/delayed_action_event.dart';
 import 'package:pomodoro_flutter/streams/global_delayed_action_stream.dart';
+import 'package:pomodoro_flutter/widgets/delayed_action_widget.dart';
 
-class GlobalLazyConfirmationListener extends StatefulWidget {
+class GlobalDelayedActionListener extends StatefulWidget {
   final Widget child;
 
-  const GlobalLazyConfirmationListener({super.key, required this.child});
+  const GlobalDelayedActionListener({super.key, required this.child});
   @override
-  State<GlobalLazyConfirmationListener> createState() =>
-      _GlobalLazyConfirmationListenerState();
+  State<GlobalDelayedActionListener> createState() =>
+      _GlobalDelayedActionListenerState();
 }
 
-class _GlobalLazyConfirmationListenerState
-    extends State<GlobalLazyConfirmationListener> {
+class _GlobalDelayedActionListenerState
+    extends State<GlobalDelayedActionListener> {
   OverlayEntry? _overlayEntry;
 
   @override
@@ -21,11 +23,29 @@ class _GlobalLazyConfirmationListenerState
   }
 
   void _listenToGlobalStream() {
-    GlobaDelayedActionStream.stream.listen((event) {});
-    // Listen to the global stream and show the confirmation dialog when needed
-    // GlobalLazyConfirmationStream.listen((event) {
-    //   _showConfirmationDialog(event);
-    // });
+    GlobaDelayedActionStream.stream.listen(_showLazyConfirmation);
+  }
+
+  void _showLazyConfirmation(DelayedActionEvent event) {
+    if (_overlayEntry != null) return; // Уже показано
+
+    _overlayEntry = OverlayEntry(
+      builder:
+          (context) => Stack(
+            children: [
+              GestureDetector(
+                onTap: () {}, // Блокируем взаимодействие с фоном
+                child: Container(color: Colors.black.withOpacity(0.5)),
+              ),
+              DelayedActionWidget(
+                onConfirm: event.confirmationAction,
+                onPostpone: event.cancellationAction,
+              ),
+            ],
+          ),
+    );
+
+    Overlay.of(context)?.insert(_overlayEntry!);
   }
 
   @override

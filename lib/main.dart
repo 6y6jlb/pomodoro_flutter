@@ -9,6 +9,7 @@ import 'package:pomodoro_flutter/providers/settings_provider.dart';
 import 'package:pomodoro_flutter/screens/home_screen.dart';
 import 'package:pomodoro_flutter/enums/pomodoro_mode_adapter.dart';
 import 'package:pomodoro_flutter/utils/datetime/time_period.dart';
+import 'package:pomodoro_flutter/widgets/listeners/global_delayed_action_listener.dart';
 import 'package:pomodoro_flutter/widgets/listeners/global_snackbar_listener.dart';
 import 'package:provider/provider.dart';
 
@@ -41,7 +42,7 @@ void main() async {
           },
         ),
       ],
-      child: const App(),
+      child: GlobalDelayedActionListener(child: App()),
     ),
   );
 }

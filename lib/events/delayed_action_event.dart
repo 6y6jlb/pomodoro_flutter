@@ -1,13 +1,15 @@
+import 'package:flutter/animation.dart';
+
 class DelayedActionEvent {
   final String type;
   final String message;
-  final String? soundKey;
-  final Map<String, dynamic>? metadata;
+  final VoidCallback confirmationAction;
+  final VoidCallback cancellationAction;
 
   DelayedActionEvent({
     required this.type,
     required this.message,
-    this.soundKey,
-    this.metadata,
+    required this.confirmationAction,
+    required this.cancellationAction,
   });
 }
