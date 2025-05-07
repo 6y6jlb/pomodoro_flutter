@@ -8,7 +8,7 @@ class GlobalNotificationStream {
 
   static Stream<NotificationEvent> get stream => _streamController.stream;
 
-  static void addNotification(NotificationEvent event) {
+  static void add(NotificationEvent event) {
     _streamController.add(event);
   }
 

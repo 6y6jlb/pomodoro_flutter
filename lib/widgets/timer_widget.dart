@@ -23,7 +23,7 @@ class TimerWidget extends StatelessWidget {
         style: commonButtonStyles,
         onPressed:
             processing.state.hasTimer()
-                ? processingProvider.makeInactive
+                ? () => processingProvider.changeState(ProcessingState.inactivity)
                 : null,
         child: Text(
           'Стоп',
@@ -41,19 +41,19 @@ class TimerWidget extends StatelessWidget {
       if (processing.state.isRest()) {
         return ElevatedButton(
           style: commonButtonStyles,
-          onPressed: processingProvider.makeRestDelay,
+          onPressed: () => processingProvider.changeState(ProcessingState.restDelay),
           child: Text('Отложить', style: commonTextStyles),
         );
       } else if (processing.state.isInactive()) {
         return ElevatedButton(
           style: commonButtonStyles,
-          onPressed: settings!.isActive ? processingProvider.makeActive : null,
+          onPressed: settings!.isActive ? () => processingProvider.changeState(ProcessingState.activity) : null,
           child: Text('Запуск', style: commonTextStyles),
         );
       } else {
         return ElevatedButton(
           style: commonButtonStyles,
-          onPressed: processingProvider.makeRest,
+          onPressed: () => processingProvider.changeState(ProcessingState.rest),
           child: Text('Перерыв', style: commonTextStyles),
         );
       }

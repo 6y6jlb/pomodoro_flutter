@@ -37,7 +37,9 @@ class SettingsProvider with ChangeNotifier {
   void updateMode(PomodoroMode mode) {
     _settings = _settings.updateMode(mode);
     _updateBoxDataAndNotifyListeners();
-    _addNotification(NotificationFactory.createModeChangeEvent(message: mode.label()));
+    _addNotification(
+      NotificationFactory.createModeChangeEvent(message: mode.label()),
+    );
   }
 
   void toggleMode() {
@@ -47,7 +49,9 @@ class SettingsProvider with ChangeNotifier {
             : PomodoroMode.standard;
     _settings = _settings.updateMode(mode);
     _updateBoxDataAndNotifyListeners();
-    _addNotification(NotificationFactory.createModeChangeEvent(message: mode.label()));
+    _addNotification(
+      NotificationFactory.createModeChangeEvent(message: mode.label()),
+    );
   }
 
   void _updateSchedule(Schedule Function(Schedule) updateFunction) {
@@ -109,6 +113,6 @@ class SettingsProvider with ChangeNotifier {
   }
 
   void _addNotification(NotificationEvent event) {
-    GlobalNotificationStream.addNotification(event);
+    GlobalNotificationStream.add(event);
   }
 }

@@ -1,9 +1,11 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:pomodoro_flutter/events/delayed_action_event.dart';
 import 'package:pomodoro_flutter/factories/notification_factory.dart';
 import 'package:pomodoro_flutter/models/pomodoro_settings.dart';
 import 'package:pomodoro_flutter/models/processing.dart';
+import 'package:pomodoro_flutter/streams/global_delayed_action_stream.dart';
 import 'package:pomodoro_flutter/streams/global_notification_stream.dart';
 import 'package:pomodoro_flutter/enums/processing_state.dart';
 import 'package:pomodoro_flutter/utils/consts/settings_constant.dart';
@@ -31,58 +33,32 @@ class ProcessingProvider with ChangeNotifier {
   Processing get processing => _processing;
 
   void changeState(ProcessingState state, {bool interactiveDelay = false}) {
-    _processing = _processing.copyWithNewState(state);
-    GlobalNotificationStream.addNotification(
-      NotificationFactory.createStateUpdateEvent(
-        message: _processing.state.label(),
-        withSound: !interactiveDelay,
-      ),
-    );
-    notifyListeners();
-  }
+    handlerCb() {
+      _processing = _processing.copyWithNewState(state);
+      GlobalNotificationStream.add(
+        NotificationFactory.createStateUpdateEvent(
+          message: _processing.state.label(),
+          withSound: !interactiveDelay,
+        ),
+      );
+      notifyListeners();
+    }
 
-  void makeActive({bool background = false}) {
-    _processing = _processing.copyWithNewState(ProcessingState.activity);
-    GlobalNotificationStream.addNotification(
-      NotificationFactory.createStateUpdateEvent(
-        message: _processing.state.label(),
-        withSound: background,
-      ),
-    );
-    notifyListeners();
-  }
-
-  void makeInactive({bool background = false}) {
-    _processing = _processing.copyWithNewState(ProcessingState.inactivity);
-    GlobalNotificationStream.addNotification(
-      NotificationFactory.createStateUpdateEvent(
-        message: _processing.state.label(),
-        withSound: background,
-      ),
-    );
-    notifyListeners();
-  }
-
-  void makeRest({bool background = false}) {
-    _processing = _processing.copyWithNewState(ProcessingState.rest);
-    GlobalNotificationStream.addNotification(
-      NotificationFactory.createStateUpdateEvent(
-        message: _processing.state.label(),
-        withSound: background,
-      ),
-    );
-    notifyListeners();
-  }
-
-  void makeRestDelay({bool background = false}) {
-    _processing = _processing.copyWithNewState(ProcessingState.restDelay);
-    GlobalNotificationStream.addNotification(
-      NotificationFactory.createStateUpdateEvent(
-        message: _processing.state.label(),
-        withSound: background,
-      ),
-    );
-    notifyListeners();
+    if (interactiveDelay) {
+      //TODO: change to dynamic delayed state
+      _delayedHandler(handlerCb, () {
+        _processing = _processing.copyWithNewState(state);
+        GlobalNotificationStream.add(
+          NotificationFactory.createStateUpdateEvent(
+            message: ProcessingState.restDelay.label(),
+            withSound: true,
+          ),
+        );
+        notifyListeners();
+      });
+    } else {
+      handlerCb();
+    }
   }
 
   void updateSettings(PomodoroSettings newSettings) {
@@ -95,22 +71,18 @@ class ProcessingProvider with ChangeNotifier {
   }
 
   void makeNextPeriod({bool background = true}) {
-    _processing = _processing.copyWithNewState(
-      _processing.getNextProcessingState(),
-    );
-    GlobalNotificationStream.addNotification(
-      NotificationFactory.createDefaultEvent(
-        message: _processing.state.label(),
-        withSound: background,
-      ),
-    );
-    notifyListeners();
+    final nextState = _processing.getNextProcessingState();
+    changeState(nextState, interactiveDelay: true);
   }
 
-    void _startLazyConfirmation(VoidCallback confirmationCallback, VoidCallback cancelCallback) {
-    _remainingTime = 5;
-    _lazyConfirmationTimer?.cancel(); // Отменяем предыдущий таймер, если он существует
-
+  void _delayedHandler(
+    VoidCallback confirmationCallback,
+    VoidCallback delayCallback,
+  ) {
+    GlobaDelayedActionStream.add(new DelayedActionEvent(type: 'todo', message: 'todo'));
+    _remainingTime = SettingsConstant.defaultRemaingDurationInSeconds;
+    _lazyConfirmationTimer
+        ?.cancel(); // Отменяем предыдущий таймер, если он существует
     _lazyConfirmationTimer = Timer.periodic(const Duration(seconds: 1), (
       timer,
     ) {
