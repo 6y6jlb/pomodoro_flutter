@@ -7,6 +7,7 @@ class GlobalDelayedActionListener extends StatefulWidget {
   final Widget child;
 
   const GlobalDelayedActionListener({super.key, required this.child});
+
   @override
   State<GlobalDelayedActionListener> createState() =>
       _GlobalDelayedActionListenerState();
@@ -29,23 +30,47 @@ class _GlobalDelayedActionListenerState
   void _showLazyConfirmation(DelayedActionEvent event) {
     if (_overlayEntry != null) return; // Уже показано
 
-    _overlayEntry = OverlayEntry(
-      builder:
-          (context) => Stack(
-            children: [
-              GestureDetector(
-                onTap: () {}, // Блокируем взаимодействие с фоном
-                child: Container(color: Colors.black.withOpacity(0.5)),
-              ),
-              DelayedActionWidget(
-                onConfirm: event.confirmationAction,
-                onPostpone: event.cancellationAction,
-              ),
-            ],
-          ),
-    );
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final overlay = Overlay.of(context);
+      if (overlay == null) {
+        return;
+      }
 
-    Overlay.of(context)?.insert(_overlayEntry!);
+      _overlayEntry = OverlayEntry(
+        builder:
+            (context) => Stack(
+              children: [
+                GestureDetector(
+                  onTap: () {}, // Блокируем взаимодействие с фоном
+                  child: Container(color: Colors.black.withOpacity(0.5)),
+                ),
+                DelayedActionWidget(
+                  onConfirm: () {
+                    _hideLazyConfirmation();
+                    event.confirmationAction();
+                  },
+                  onPostpone: () {
+                    _hideLazyConfirmation();
+                    event.cancellationAction();
+                  },
+                ),
+              ],
+            ),
+      );
+
+      overlay.insert(_overlayEntry!);
+    });
+  }
+
+  void _hideLazyConfirmation() {
+    _overlayEntry?.remove();
+    _overlayEntry = null;
+  }
+
+  @override
+  void dispose() {
+    _overlayEntry?.remove();
+    super.dispose();
   }
 
   @override

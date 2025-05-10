@@ -14,6 +14,10 @@ import 'package:pomodoro_flutter/widgets/listeners/global_snackbar_listener.dart
 import 'package:provider/provider.dart';
 
 void main() async {
+  // Инициализируем Flutter
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // Инициализируем Hive
   await Hive.initFlutter();
   Hive.registerAdapter(PomodoroModeAdapter());
   Hive.registerAdapter(TimePeriodAdapter());
@@ -23,11 +27,11 @@ void main() async {
 
   await Hive.openBox('settings');
 
-  final settingsProvider = SettingsProvider();
-
-  WidgetsFlutterBinding.ensureInitialized();
-
+  // Инициализируем локализацию
   await initializeDateFormatting('ru_RU', null);
+
+  // Создаем провайдеры
+  final settingsProvider = SettingsProvider();
 
   runApp(
     MultiProvider(
@@ -42,7 +46,7 @@ void main() async {
           },
         ),
       ],
-      child: GlobalDelayedActionListener(child: App()),
+      child: App(),
     ),
   );
 }
@@ -67,7 +71,9 @@ class App extends StatelessWidget {
         ),
       ),
       themeMode: ThemeMode.system,
-      home: GlobalSnackbarListener(child: HomeScreen()),
+      home: GlobalDelayedActionListener(
+        child: GlobalSnackbarListener(child: HomeScreen()),
+      ),
     );
   }
 }

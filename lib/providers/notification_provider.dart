@@ -35,6 +35,8 @@ class NotificationProvider with ChangeNotifier {
       _soundService.playSound(event.soundKey!);
     }
 
-    _notificationService.showNotification(event.type, event.message);
+    if(event.type != 'sound' && event.message != null) {
+      _notificationService.showNotification(event.type, event.message!);
+    }
   }
 }

@@ -33,31 +33,30 @@ class ProcessingProvider with ChangeNotifier {
   Processing get processing => _processing;
 
   void changeState(ProcessingState state, {bool interactiveDelay = false}) {
-    handlerCb() {
+    void handlerCb(bool withSound) {
       _processing = _processing.copyWithNewState(state);
       GlobalNotificationStream.add(
         NotificationFactory.createStateUpdateEvent(
           message: _processing.state.label(),
-          withSound: !interactiveDelay,
+          withSound: withSound,
         ),
       );
       notifyListeners();
     }
 
     if (interactiveDelay) {
-      //TODO: change to dynamic delayed state
-      _delayedHandler(handlerCb, () {
+      _delayedHandler(handlerCb, (withSound) {
         _processing = _processing.copyWithNewState(state);
         GlobalNotificationStream.add(
           NotificationFactory.createStateUpdateEvent(
             message: ProcessingState.restDelay.label(),
-            withSound: true,
+            withSound: false,
           ),
         );
         notifyListeners();
       }, 'Пора сделать перерыв!');
     } else {
-      handlerCb();
+      handlerCb(false);
     }
   }
 
@@ -76,21 +75,21 @@ class ProcessingProvider with ChangeNotifier {
   }
 
   void _delayedHandler(
-    VoidCallback confirmationCallback,
-    VoidCallback cancellationCallback,
+    void Function(bool withSound) confirmationCallback,
+    void Function(bool withSound) cancellationCallback,
     String message,
   ) {
     GlobaDelayedActionStream.add(
       DelayedActionEvent(
         type: 'state_change',
         message: message,
-        confirmationAction: confirmationCallback,
-        cancellationAction: cancellationCallback,
+        confirmationAction: () => confirmationCallback(false),
+        cancellationAction: () => cancellationCallback(false),
       ),
     );
+    GlobalNotificationStream.add(NotificationFactory.creatSoundEvent());
     _remainingTime = SettingsConstant.defaultRemaingDurationInSeconds;
-    _lazyConfirmationTimer
-        ?.cancel(); // Отменяем предыдущий таймер, если он существует
+    _lazyConfirmationTimer?.cancel(); // Отменяем предыдущий таймер, если он существует
     _lazyConfirmationTimer = Timer.periodic(const Duration(seconds: 1), (
       timer,
     ) {
@@ -98,7 +97,7 @@ class ProcessingProvider with ChangeNotifier {
 
       if (_remainingTime <= 0) {
         timer.cancel();
-        confirmationCallback();
+        confirmationCallback(true);
       }
     });
   }

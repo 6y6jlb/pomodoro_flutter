@@ -75,7 +75,7 @@ class _DelayedActionWidgetState extends State<DelayedActionWidget> {
               style: Theme.of(context).textTheme.bodyMedium,
             ),
             const SizedBox(height: 16),
-            Row(
+            Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 ElevatedButton(

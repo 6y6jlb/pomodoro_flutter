@@ -45,4 +45,13 @@ class NotificationFactory {
       soundKey: withSound ? 'default' : null,
     );
   }
+
+   static NotificationEvent creatSoundEvent({
+    String soundKey = 'request' ,
+  }) {
+    return NotificationEvent(
+      type: 'sound',
+      soundKey: soundKey,
+    );
+  }
 }

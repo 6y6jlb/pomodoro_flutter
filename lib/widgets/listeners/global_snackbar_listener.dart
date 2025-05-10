@@ -27,7 +27,10 @@ class _GlobalSnackbarListenerState extends State<GlobalSnackbarListener> {
     _notificationSubscription = notificationProvider.eventStream.listen((
       NotificationEvent event,
     ) {
-      _showSnackbar(event.message);
+      if(event.message != null) {
+        _showSnackbar(event.message!);
+      }
+      
     });
   }
 
