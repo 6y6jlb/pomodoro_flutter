@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:pomodoro_flutter/events/notification_events.dart';
-import 'package:pomodoro_flutter/providers/notification_provider.dart';
-import 'package:provider/provider.dart';
+import 'package:pomodoro_flutter/event_bus/event_bus_provider.dart';
+import 'package:pomodoro_flutter/event_bus/typed_event_bus.dart';
 
 class GlobalSnackbarListener extends StatefulWidget {
   final Widget child;
@@ -17,21 +17,20 @@ class GlobalSnackbarListener extends StatefulWidget {
 class _GlobalSnackbarListenerState extends State<GlobalSnackbarListener> {
   late StreamSubscription<NotificationEvent> _notificationSubscription;
 
-  @override
-   void initState() {
-    super.initState();
-    final notificationProvider = Provider.of<NotificationProvider>(
-      context,
-      listen: false,
-    );
-    _notificationSubscription = notificationProvider.eventStream.listen((
-      NotificationEvent event,
+  void _listenForNotificationEvent() {
+    _notificationSubscription = eventBus.onTyped<NotificationEvent>().listen((
+      event,
     ) {
-      if(event.message != null) {
+      if (event.message != null) {
         _showSnackbar(event.message!);
       }
-      
     });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _listenForNotificationEvent();
   }
 
   void _showSnackbar(String message) {

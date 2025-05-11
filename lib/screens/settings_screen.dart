@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:pomodoro_flutter/factories/notification_factory.dart';
+import 'package:pomodoro_flutter/event_bus/event_bus_provider.dart';
 import 'package:pomodoro_flutter/providers/settings_provider.dart';
-import 'package:pomodoro_flutter/streams/global_notification_stream.dart';
 import 'package:pomodoro_flutter/enums/pomodoro_mode.dart';
+import 'package:pomodoro_flutter/event_bus/typed_event_bus.dart';
+import 'package:pomodoro_flutter/utils/styles/app_text_styles.dart';
 import 'package:pomodoro_flutter/widgets/schedule_settings_widget.dart';
 import 'package:pomodoro_flutter/widgets/standart_settings_widget.dart';
 import 'package:provider/provider.dart';
@@ -22,7 +24,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.green[400],
-        title: const Text('Настройки'),
+        title: Text('Настройки', style: AppTextStyles.title),
       ),
       body: Padding(
         padding: const EdgeInsets.all(20),
@@ -55,7 +57,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       context,
                       listen: false,
                     ).updateMode(newMode);
-                    GlobalNotificationStream.add(
+                    eventBus.emit(
                       NotificationFactory.createModeChangeEvent(
                         message: newMode.label(),
                       ),

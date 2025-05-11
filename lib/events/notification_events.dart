@@ -1,4 +1,6 @@
-class NotificationEvent {
+import 'package:pomodoro_flutter/events/app_event.dart';
+
+class NotificationEvent extends AppEvent {
   final String type;
   final String? message;
   final String? soundKey;

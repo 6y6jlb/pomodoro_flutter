@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:pomodoro_flutter/enums/processing_state.dart';
+import 'package:pomodoro_flutter/providers/processing_provider.dart';
 import 'package:pomodoro_flutter/providers/settings_provider.dart';
 import 'package:pomodoro_flutter/screens/settings_screen.dart';
 import 'package:pomodoro_flutter/utils/styles/app_text_styles.dart';
@@ -18,11 +20,13 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final settingsProvider = Provider.of<SettingsProvider>(context);
+    final processingProvider = Provider.of<ProcessingProvider>(context);
     final settings = settingsProvider.settings;
+    final processing = processingProvider.processing;
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Pomodoro Timer'),
+        title: Text(processing.state.label(), style: AppTextStyles.title),
         backgroundColor: Colors.green[400],
         actions: [
           IconButton(
@@ -49,9 +53,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   'Режим: ${settings.mode.label()}',
                   style: AppTextStyles.caption,
                 ),
-                
+
                 const SizedBox(height: 4),
-                 if (settings.mode != PomodoroMode.standard)
+                if (settings.mode != PomodoroMode.standard)
                   ScheduleInfoWidget(schedule: settings.schedule),
                 const SizedBox(height: 4),
                 Text(

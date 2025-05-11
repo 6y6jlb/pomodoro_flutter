@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
-import 'package:intl/intl.dart';
 import 'package:pomodoro_flutter/exceptions/no_active_days_exception.dart';
 import 'package:pomodoro_flutter/utils/consts/settings_constant.dart';
 import 'package:pomodoro_flutter/utils/datetime/time_period.dart';
@@ -142,8 +141,8 @@ class Schedule {
           candidateDay.year,
           candidateDay.month,
           candidateDay.day,
-          activeTimePeriod.start!.hour,
-          activeTimePeriod.start!.minute,
+          activeTimePeriod.start.hour,
+          activeTimePeriod.start.minute,
         );
       }
     }
@@ -165,8 +164,8 @@ class Schedule {
       now.year,
       now.month,
       now.day,
-      activeTimePeriod.end!.hour,
-      activeTimePeriod.end!.minute,
+      activeTimePeriod.end.hour,
+      activeTimePeriod.end.minute,
     );
   }
 

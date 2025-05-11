@@ -5,7 +5,8 @@ import 'package:pomodoro_flutter/factories/notification_factory.dart';
 import 'package:pomodoro_flutter/models/pomodoro_settings.dart';
 import 'package:pomodoro_flutter/models/schedule.dart';
 import 'package:pomodoro_flutter/enums/pomodoro_mode.dart';
-import 'package:pomodoro_flutter/streams/global_notification_stream.dart';
+import 'package:pomodoro_flutter/event_bus/event_bus_provider.dart';
+import 'package:pomodoro_flutter/event_bus/typed_event_bus.dart';
 import 'package:pomodoro_flutter/utils/datetime/time_period.dart';
 
 class SettingsProvider with ChangeNotifier {
@@ -113,6 +114,6 @@ class SettingsProvider with ChangeNotifier {
   }
 
   void _addNotification(NotificationEvent event) {
-    GlobalNotificationStream.add(event);
+    eventBus.emit(event);
   }
 }

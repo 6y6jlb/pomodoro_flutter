@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pomodoro_flutter/events/delayed_action_event.dart';
-import 'package:pomodoro_flutter/streams/global_delayed_action_stream.dart';
+import 'package:pomodoro_flutter/event_bus/event_bus_provider.dart';
+import 'package:pomodoro_flutter/event_bus/typed_event_bus.dart';
 import 'package:pomodoro_flutter/widgets/delayed_action_widget.dart';
 
 class GlobalDelayedActionListener extends StatefulWidget {
@@ -20,11 +21,11 @@ class _GlobalDelayedActionListenerState
   @override
   void initState() {
     super.initState();
-    _listenToGlobalStream();
+    _listenForDelayedActionEvent();
   }
 
-  void _listenToGlobalStream() {
-    GlobaDelayedActionStream.stream.listen(_showLazyConfirmation);
+    void _listenForDelayedActionEvent() {
+    eventBus.onTyped<DelayedActionEvent>().listen(_showLazyConfirmation);
   }
 
   void _showLazyConfirmation(DelayedActionEvent event) {
@@ -32,9 +33,6 @@ class _GlobalDelayedActionListenerState
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final overlay = Overlay.of(context);
-      if (overlay == null) {
-        return;
-      }
 
       _overlayEntry = OverlayEntry(
         builder:

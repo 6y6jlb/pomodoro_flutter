@@ -5,8 +5,8 @@ import 'package:pomodoro_flutter/events/delayed_action_event.dart';
 import 'package:pomodoro_flutter/factories/notification_factory.dart';
 import 'package:pomodoro_flutter/models/pomodoro_settings.dart';
 import 'package:pomodoro_flutter/models/processing.dart';
-import 'package:pomodoro_flutter/streams/global_delayed_action_stream.dart';
-import 'package:pomodoro_flutter/streams/global_notification_stream.dart';
+import 'package:pomodoro_flutter/event_bus/event_bus_provider.dart';
+import 'package:pomodoro_flutter/event_bus/typed_event_bus.dart';
 import 'package:pomodoro_flutter/enums/processing_state.dart';
 import 'package:pomodoro_flutter/utils/consts/settings_constant.dart';
 
@@ -33,9 +33,10 @@ class ProcessingProvider with ChangeNotifier {
   Processing get processing => _processing;
 
   void changeState(ProcessingState state, {bool interactiveDelay = false}) {
+    eventBus.emit(NotificationFactory.creatSoundEvent());
     void handlerCb(bool withSound) {
       _processing = _processing.copyWithNewState(state);
-      GlobalNotificationStream.add(
+      eventBus.emit(
         NotificationFactory.createStateUpdateEvent(
           message: _processing.state.label(),
           withSound: withSound,
@@ -47,7 +48,7 @@ class ProcessingProvider with ChangeNotifier {
     if (interactiveDelay) {
       _delayedHandler(handlerCb, (withSound) {
         _processing = _processing.copyWithNewState(state);
-        GlobalNotificationStream.add(
+        eventBus.emit(
           NotificationFactory.createStateUpdateEvent(
             message: ProcessingState.restDelay.label(),
             withSound: false,
@@ -79,7 +80,7 @@ class ProcessingProvider with ChangeNotifier {
     void Function(bool withSound) cancellationCallback,
     String message,
   ) {
-    GlobaDelayedActionStream.add(
+    eventBus.emit(
       DelayedActionEvent(
         type: 'state_change',
         message: message,
@@ -87,9 +88,10 @@ class ProcessingProvider with ChangeNotifier {
         cancellationAction: () => cancellationCallback(false),
       ),
     );
-    GlobalNotificationStream.add(NotificationFactory.creatSoundEvent());
+    eventBus.emit(NotificationFactory.creatSoundEvent());
     _remainingTime = SettingsConstant.defaultRemaingDurationInSeconds;
-    _lazyConfirmationTimer?.cancel(); // Отменяем предыдущий таймер, если он существует
+    _lazyConfirmationTimer
+        ?.cancel(); // Отменяем предыдущий таймер, если он существует
     _lazyConfirmationTimer = Timer.periodic(const Duration(seconds: 1), (
       timer,
     ) {

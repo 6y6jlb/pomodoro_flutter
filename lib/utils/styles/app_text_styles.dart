@@ -8,6 +8,12 @@ class AppTextStyles {
     fontWeight: FontWeight.bold,
   );
 
+  static TextStyle title = TextStyle(
+    fontSize: 24,
+    fontWeight: FontWeight.w500,
+    color: Colors.grey[800],
+  );
+
   static const TextStyle subtitle = TextStyle(
     fontSize: 18,
     fontWeight: FontWeight.w500,
