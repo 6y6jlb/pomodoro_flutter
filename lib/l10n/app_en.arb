@@ -1,0 +1,10 @@
+{
+    "@@locale": "en",
+    "processingStateLabel_activity": "Active",
+    "processingStateLabel_inactivity": "Inactive",
+    "processingStateLabel_rest": "Break",
+    "processingStateLabel_restDelay": "Delayed Break",
+    "processingStateLabel_unknown": "Unknown",
+    "pomodoroModeLabel_custom": "Custom",
+    "pomoodoroModeLabel_schedule": "Schedule"
+}

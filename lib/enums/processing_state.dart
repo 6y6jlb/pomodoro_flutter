@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pomodoro_flutter/utils/translation/t.dart';
 
 enum ProcessingState { rest, activity, inactivity, restDelay }
 
@@ -14,13 +15,13 @@ extension HasTime on ProcessingState {
 
 extension Label on ProcessingState {
   String label() {
-    const labels = {
-      ProcessingState.activity: 'Активно',
-      ProcessingState.inactivity: 'Неактивно',
-      ProcessingState.rest: 'Перерыв',
-      ProcessingState.restDelay: 'Перерыв отложен',
+    var labels = {
+      ProcessingState.activity: t.processingStateLabel_activity,
+      ProcessingState.inactivity: t.processingStateLabel_inactivity,
+      ProcessingState.rest: t.processingStateLabel_rest,
+      ProcessingState.restDelay: t.processingStateLabel_restDelay,
     };
-    return labels[this] ?? 'Неактивно';
+    return labels[this] ?? t.processingStateLabel_unknown;
   }
 }
 

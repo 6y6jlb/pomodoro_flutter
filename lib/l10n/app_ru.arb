@@ -1,0 +1,10 @@
+{
+    "@@locale": "ru",
+    "processingStateLabel_activity": "Активно",
+    "processingStateLabel_inactivity": "Неактивно",
+    "processingStateLabel_rest": "Перерыв",
+    "processingStateLabel_restDelay": "Отложенный перерыв",
+    "processingStateLabel_unknown": "Неизвестно",
+    "pomodoroModeLabel_custom": "Пользовательский",
+    "pomoodoroModeLabel_schedule": "Расписание"
+}

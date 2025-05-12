@@ -1,8 +1,10 @@
+import 'package:pomodoro_flutter/utils/translation/t.dart';
+
 enum PomodoroMode { standard, scheduleBased }
 
 extension Label on PomodoroMode {
   String label() {
-    return isScheduleBased() ? 'Расписание' : 'Пользовательский';
+    return isScheduleBased() ? t.pomoodoroModeLabel_schedule : t.pomodoroModeLabel_custom;
   }
 }
 

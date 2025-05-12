@@ -33,9 +33,11 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_local_notifications: ^19.1.0
+  flutter_localizations:
+    sdk: flutter
   hive: ^2.2.3
   hive_flutter: ^1.1.0
-  intl: ^0.20.2
+  intl: any
   provider: ^6.1.2
   time_range_picker: ^2.3.0
 
@@ -62,6 +64,7 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+  generate: true
 
   # To add assets to your application, add an assets section, like this:
   assets:

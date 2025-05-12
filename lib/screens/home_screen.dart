@@ -8,6 +8,7 @@ import 'package:pomodoro_flutter/enums/pomodoro_mode.dart';
 import 'package:pomodoro_flutter/widgets/schedule_info_widget.dart';
 import 'package:pomodoro_flutter/widgets/timer_widget.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});

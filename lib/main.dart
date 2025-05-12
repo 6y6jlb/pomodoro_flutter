@@ -8,10 +8,14 @@ import 'package:pomodoro_flutter/providers/processing_provider.dart';
 import 'package:pomodoro_flutter/providers/settings_provider.dart';
 import 'package:pomodoro_flutter/screens/home_screen.dart';
 import 'package:pomodoro_flutter/enums/pomodoro_mode_adapter.dart';
+import 'package:pomodoro_flutter/services/i_10n.dart';
 import 'package:pomodoro_flutter/utils/datetime/time_period.dart';
 import 'package:pomodoro_flutter/widgets/listeners/global_delayed_action_listener.dart';
 import 'package:pomodoro_flutter/widgets/listeners/global_snackbar_listener.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:intl/intl.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 void main() async {
   // Инициализируем Flutter
@@ -74,6 +78,22 @@ class App extends StatelessWidget {
       home: GlobalDelayedActionListener(
         child: GlobalSnackbarListener(child: HomeScreen()),
       ),
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
+      localeResolutionCallback: (locale, supportedLocales) {
+        for (var supportedLocale in supportedLocales) {
+          if (supportedLocale.languageCode == locale?.languageCode) {
+            return supportedLocale;
+          }
+        }
+
+        return const Locale('en', '');
+      },
+        builder: (context, child) {
+        // Инициализация сервиса локализации
+        I10n().initialize(context);
+        return child!;
+      },
     );
   }
 }
