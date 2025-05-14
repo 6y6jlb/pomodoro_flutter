@@ -4,6 +4,7 @@ import 'package:pomodoro_flutter/event_bus/event_bus_provider.dart';
 import 'package:pomodoro_flutter/providers/settings_provider.dart';
 import 'package:pomodoro_flutter/enums/pomodoro_mode.dart';
 import 'package:pomodoro_flutter/event_bus/typed_event_bus.dart';
+import 'package:pomodoro_flutter/services/i_10n.dart';
 import 'package:pomodoro_flutter/utils/styles/app_text_styles.dart';
 import 'package:pomodoro_flutter/widgets/schedule_settings_widget.dart';
 import 'package:pomodoro_flutter/widgets/standart_settings_widget.dart';
@@ -24,7 +25,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.green[400],
-        title: Text('Настройки', style: AppTextStyles.title),
+        title: Text(I10n().t.settingsScreenTitle, style: AppTextStyles.title),
       ),
       body: Padding(
         padding: const EdgeInsets.all(20),

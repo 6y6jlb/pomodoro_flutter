@@ -1,10 +1,12 @@
-import 'package:pomodoro_flutter/utils/translation/t.dart';
+
+
+import 'package:pomodoro_flutter/services/i_10n.dart';
 
 enum PomodoroMode { standard, scheduleBased }
 
 extension Label on PomodoroMode {
   String label() {
-    return isScheduleBased() ? t.pomoodoroModeLabel_schedule : t.pomodoroModeLabel_custom;
+    return isScheduleBased() ? I10n().t.pomoodoroModeLabel_schedule : I10n().t.pomodoroModeLabel_custom;
   }
 }
 

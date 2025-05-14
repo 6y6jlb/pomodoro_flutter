@@ -12,5 +12,7 @@ class I10n {
     _localizations = AppLocalizations.of(context)!;
   }
 
-  AppLocalizations get localizations => _localizations;
+  AppLocalizations get t => _localizations;
+
+  
 }

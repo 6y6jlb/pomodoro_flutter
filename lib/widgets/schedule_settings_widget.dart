@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pomodoro_flutter/providers/settings_provider.dart';
+import 'package:pomodoro_flutter/services/i_10n.dart';
 import 'package:pomodoro_flutter/utils/consts/settings_constant.dart';
 import 'package:pomodoro_flutter/utils/datetime/time_period.dart';
 import 'package:pomodoro_flutter/widgets/info_block_widget.dart';
@@ -37,14 +38,14 @@ class ScheduleSettingsWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         InfoBlockWidget(
-          title: 'Режим "Расписание"',
+          title: "${I10n().t.operationModeLabel} ${I10n().t.pomoodoroModeLabel_schedule}",
           description:
-              'Настройте активные дни и часы — таймер будет работать только тогда, когда нужно.',
+              I10n().t.scheduleScheduleModeDesctiption,
           color: Colors.green[50],
         ),
         const SizedBox(height: 16),
         Text(
-          'Активные дни: ${schedule.activeDaysOfWeek.length}',
+          '${I10n().t.scheduleActiveDaysLabel} ${schedule.activeDaysOfWeek.length}',
           style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
         ),
         SizedBox(height: 10),
@@ -66,7 +67,7 @@ class ScheduleSettingsWidget extends StatelessWidget {
         ),
         const SizedBox(height: 16),
         Text(
-          'Активные часы.: ${schedule.activeTimePeriod.start.format(context)} - ${schedule.activeTimePeriod.end.format(context)}',
+          '${I10n().t.scheduleActiveHoursLabel} ${schedule.activeTimePeriod.start.format(context)} - ${schedule.activeTimePeriod.end.format(context)}',
           style: TextStyle(fontSize: 18.8, fontWeight: FontWeight.bold),
         ),
         ElevatedButton(
@@ -100,10 +101,10 @@ class ScheduleSettingsWidget extends StatelessWidget {
               },
             );
           },
-          child: const Text("Указать период активности"),
+          child: Text(I10n().t.scheduleActiveDaysLabel),
         ),
         Text(
-          'Сессия длительность мин.: ${schedule.sessionDurationInSeconds ~/ 60}',
+          '${I10n().t.sesstionDuretionLabel} ${schedule.sessionDurationInSeconds ~/ 60} ${I10n().t.unitShort_minute}',
           style: TextStyle(fontSize: 18.8, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 8),
@@ -117,7 +118,7 @@ class ScheduleSettingsWidget extends StatelessWidget {
         ),
         const SizedBox(height: 16),
         Text(
-          'Перервыв длительность мин.: ${schedule.breakDurationInSeconds ~/ 60}',
+          '${I10n().t.breakDurationLabel} ${schedule.breakDurationInSeconds ~/ 60} ${I10n().t.unitShort_minute}',
           style: TextStyle(fontSize: 18.8, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 8),
@@ -131,13 +132,13 @@ class ScheduleSettingsWidget extends StatelessWidget {
         ),
         const SizedBox(height: 16),
         Text(
-          'Исключения: ${schedule.exceptionsDays.length}',
+          '${I10n().t.scheduleExceptionsLabel} ${schedule.exceptionsDays.length}',
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 8),
         ElevatedButton(
           onPressed: addException,
-          child: const Text('Добавить исключинеие'),
+          child: Text(I10n().t.scheduleExceptionAddLabel),
         ),
         const SizedBox(height: 8),
         ElevatedButton(
@@ -148,7 +149,7 @@ class ScheduleSettingsWidget extends StatelessWidget {
                       context: context,
                       builder: (context) {
                         return AlertDialog.adaptive(
-                          title: Text('Исключения'),
+                          title: Text(I10n().t.scheduleExceptionsLabel),
                           content: Consumer<SettingsProvider>(
                             builder: (context, settingsProvider, _) {
                               final schedule =
@@ -192,7 +193,7 @@ class ScheduleSettingsWidget extends StatelessWidget {
                     );
                   }
                   : null,
-          child: const Text('Посмотреть исключения'),
+          child: Text(I10n().t.scheduleExceptionShowLabel),
         ),
       ],
     );

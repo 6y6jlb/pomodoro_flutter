@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:pomodoro_flutter/exceptions/no_active_days_exception.dart';
 import 'package:pomodoro_flutter/models/schedule.dart';
+import 'package:pomodoro_flutter/services/i_10n.dart';
 import 'package:pomodoro_flutter/utils/styles/app_text_styles.dart';
 
 class ScheduleInfoWidget extends StatelessWidget {
@@ -11,22 +12,22 @@ class ScheduleInfoWidget extends StatelessWidget {
 
   String _getScheduleStatus(Schedule schedule) {
     return schedule.isActiveNow()
-        ? 'Расписание: активно'
-        : 'Расписание: неактивно';
+        ? I10n().t.scheduleStateLabel_active
+        : I10n().t.scheduleStateLabel_inactive;
   }
 
   String _getScheduleDetails(Schedule schedule) {
     if (schedule.isActiveNow()) {
       final endTime = schedule.currentPeriodEnd();
       if (endTime != null) {
-        return 'Закончится в ${_formatTime(endTime)}';
+        return I10n().t.schedultWillEndAt(_formatTime(endTime));
       }
     } else {
       try {
         final startTime = schedule.nextPeriodStart();
-        return 'Начнется ${_formatDay(startTime)}, в ${_formatTime(startTime)}';
+        return I10n().t.scheduleWillStartAt(_formatDay(startTime), _formatTime(startTime));
       } on NoActiveDaysException {
-        return 'Нет активных дней в расписании';
+        return I10n().t.scheduleHasNotActiveDay;
       }
     }
     return '-';

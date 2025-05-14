@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pomodoro_flutter/providers/processing_provider.dart';
+import 'package:pomodoro_flutter/services/i_10n.dart';
 import 'package:pomodoro_flutter/utils/styles/app_text_styles.dart';
 import 'package:pomodoro_flutter/enums/processing_state.dart';
 import 'package:pomodoro_flutter/widgets/animated_circle_times.dart';
@@ -26,7 +27,7 @@ class TimerWidget extends StatelessWidget {
                 ? () => processingProvider.changeState(ProcessingState.inactivity)
                 : null,
         child: Text(
-          'Стоп',
+          I10n().t.action_stop,
           style: AppTextStyles.action.copyWith(
             color: Colors.white,
           ),
@@ -42,19 +43,19 @@ class TimerWidget extends StatelessWidget {
         return ElevatedButton(
           style: commonButtonStyles,
           onPressed: () => processingProvider.changeState(ProcessingState.restDelay),
-          child: Text('Отложить', style: commonTextStyles),
+          child: Text(I10n().t.action_delay, style: commonTextStyles),
         );
       } else if (processing.state.isInactive()) {
         return ElevatedButton(
           style: commonButtonStyles,
           onPressed: settings!.isActive ? () => processingProvider.changeState(ProcessingState.activity) : null,
-          child: Text('Запуск', style: commonTextStyles),
+          child: Text(I10n().t.action_start, style: commonTextStyles),
         );
       } else {
         return ElevatedButton(
           style: commonButtonStyles,
           onPressed: () => processingProvider.changeState(ProcessingState.rest),
-          child: Text('Перерыв', style: commonTextStyles),
+          child: Text(I10n().t.action_rest, style: commonTextStyles),
         );
       }
     }

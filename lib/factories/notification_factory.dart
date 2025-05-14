@@ -1,4 +1,5 @@
 import 'package:pomodoro_flutter/events/notification_events.dart';
+import 'package:pomodoro_flutter/services/i_10n.dart';
 
 class NotificationFactory {
   static NotificationEvent createDefaultEvent({
@@ -29,7 +30,7 @@ class NotificationFactory {
   }) {
     return NotificationEvent(
       type: 'status_update',
-      message: 'Status updated: $message',
+      message: I10n().t.notification_stateChanged(message),
       soundKey: withSound ? 'request' : null,
     );
   }
@@ -40,8 +41,7 @@ class NotificationFactory {
   }) {
     return NotificationEvent(
       type: 'exception_added',
-      message:
-          'Added exception for ${(date ?? DateTime.now()).toIso8601String()}',
+      message: I10n().t.notification_exceptionAdded((date ?? DateTime.now()).toIso8601String()),
       soundKey: withSound ? 'default' : null,
     );
   }

@@ -3,12 +3,12 @@ import 'package:pomodoro_flutter/enums/processing_state.dart';
 import 'package:pomodoro_flutter/providers/processing_provider.dart';
 import 'package:pomodoro_flutter/providers/settings_provider.dart';
 import 'package:pomodoro_flutter/screens/settings_screen.dart';
+import 'package:pomodoro_flutter/services/i_10n.dart';
 import 'package:pomodoro_flutter/utils/styles/app_text_styles.dart';
 import 'package:pomodoro_flutter/enums/pomodoro_mode.dart';
 import 'package:pomodoro_flutter/widgets/schedule_info_widget.dart';
 import 'package:pomodoro_flutter/widgets/timer_widget.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -51,7 +51,7 @@ class _HomeScreenState extends State<HomeScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  'Режим: ${settings.mode.label()}',
+                  "${I10n().t.operationModeLabel} ${settings.mode.label()}",
                   style: AppTextStyles.caption,
                 ),
 
@@ -60,12 +60,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   ScheduleInfoWidget(schedule: settings.schedule),
                 const SizedBox(height: 4),
                 Text(
-                  'Сессия: ${settings.currentSessionDurationInSeconds ~/ 60} мин.',
+                  "${I10n().t.sesstionDuretionLabel} ${settings.currentSessionDurationInSeconds ~/ 60} ${I10n().t.unitShort_minute}",
                   style: AppTextStyles.caption,
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  'Перерыв: ${settings.currentBreakDurationInSeconds ~/ 60} мин.',
+                  "${I10n().t.breakDurationLabel} ${settings.currentBreakDurationInSeconds ~/ 60} ${I10n().t.unitShort_minute}",
                   style: AppTextStyles.caption,
                 ),
                 const SizedBox(height: 30),

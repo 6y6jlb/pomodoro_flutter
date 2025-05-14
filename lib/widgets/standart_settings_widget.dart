@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pomodoro_flutter/providers/settings_provider.dart';
+import 'package:pomodoro_flutter/services/i_10n.dart';
 import 'package:pomodoro_flutter/utils/consts/settings_constant.dart';
 import 'package:pomodoro_flutter/widgets/info_block_widget.dart';
 import 'package:provider/provider.dart';
@@ -15,14 +16,15 @@ class StandartSettingsWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         InfoBlockWidget(
-          title: 'Режим "Пользовательский"',
+           title:
+              "${I10n().t.operationModeLabel} ${I10n().t.pomodoroModeLabel_custom}",
           description:
-              'Выбирайте длительность работы и отдыха без привязки к графику.',
+              I10n().t.scheduleCustomModeDesctiption,
           color: Colors.blue[50],
         ),
         const SizedBox(height: 16),
         Text(
-          'Сессия длительность мин.: ${settings.userSessionDurationInSeconds ~/ 60}',
+          '${I10n().t.sesstionDuretionLabel} ${settings.userSessionDurationInSeconds ~/ 60} ${I10n().t.unitShort_minute}',
           style: TextStyle(fontSize: 18.8, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 8),
@@ -39,7 +41,7 @@ class StandartSettingsWidget extends StatelessWidget {
         ),
         const SizedBox(height: 16),
         Text(
-          'Перервыв длительность мин.: ${settings.userBreakDurationInSeconds ~/ 60}',
+          '${I10n().t.breakDurationLabel} ${settings.userBreakDurationInSeconds ~/ 60} ${I10n().t.unitShort_minute}',
           style: TextStyle(fontSize: 18.8, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 8),
