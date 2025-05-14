@@ -13,8 +13,6 @@ import 'package:pomodoro_flutter/utils/datetime/time_period.dart';
 import 'package:pomodoro_flutter/widgets/listeners/global_delayed_action_listener.dart';
 import 'package:pomodoro_flutter/widgets/listeners/global_snackbar_listener.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:intl/intl.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 void main() async {
