@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pomodoro_flutter/enums/alert_level.dart';
 import 'package:pomodoro_flutter/providers/settings_provider.dart';
 import 'package:pomodoro_flutter/services/i_10n.dart';
 import 'package:pomodoro_flutter/utils/consts/settings_constant.dart';
@@ -38,10 +39,10 @@ class ScheduleSettingsWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         InfoBlockWidget(
-          title: "${I10n().t.operationModeLabel} ${I10n().t.pomoodoroModeLabel_schedule}",
+          title: "${I10n().t.operationModeLabel} ${I10n().t.pomodoroModeLabel_schedule}",
           description:
-              I10n().t.scheduleScheduleModeDesctiption,
-          color: Colors.green[50],
+              I10n().t.scheduleScheduleModeDescription,
+          level: AlertLevel.success,
         ),
         const SizedBox(height: 16),
         Text(
@@ -104,7 +105,7 @@ class ScheduleSettingsWidget extends StatelessWidget {
           child: Text(I10n().t.scheduleActiveDaysLabel),
         ),
         Text(
-          '${I10n().t.sesstionDuretionLabel} ${schedule.sessionDurationInSeconds ~/ 60} ${I10n().t.unitShort_minute}',
+          '${I10n().t.sessionDurationLabel} ${schedule.sessionDurationInSeconds ~/ 60} ${I10n().t.unitShort_minute}',
           style: TextStyle(fontSize: 18.8, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 8),

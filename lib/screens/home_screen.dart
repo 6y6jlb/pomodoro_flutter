@@ -28,7 +28,6 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(processing.state.label(), style: AppTextStyles.title),
-        backgroundColor: Colors.green[400],
         actions: [
           IconButton(
             onPressed: () {
@@ -37,7 +36,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 MaterialPageRoute(builder: (context) => const SettingsScreen()),
               );
             },
-            icon: Icon(Icons.settings),
+            icon: Icon(
+              Icons.settings,
+              color: Theme.of(context).iconTheme.color,
+            ),
           ),
         ],
       ),
@@ -60,12 +62,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   ScheduleInfoWidget(schedule: settings.schedule),
                 const SizedBox(height: 4),
                 Text(
-                  "${I10n().t.sesstionDuretionLabel} ${settings.currentSessionDurationInSeconds ~/ 60} ${I10n().t.unitShort_minute}",
+                  "${I10n().t.sessionDurationLabel} ${settings.currentSessionDurationInMinutes} ${I10n().t.unitShort_minute}",
                   style: AppTextStyles.caption,
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  "${I10n().t.breakDurationLabel} ${settings.currentBreakDurationInSeconds ~/ 60} ${I10n().t.unitShort_minute}",
+                  "${I10n().t.breakDurationLabel} ${settings.currentBreakDurationInMinutes} ${I10n().t.unitShort_minute}",
                   style: AppTextStyles.caption,
                 ),
                 const SizedBox(height: 30),

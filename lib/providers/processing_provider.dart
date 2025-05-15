@@ -8,6 +8,7 @@ import 'package:pomodoro_flutter/models/processing.dart';
 import 'package:pomodoro_flutter/event_bus/event_bus_provider.dart';
 import 'package:pomodoro_flutter/event_bus/typed_event_bus.dart';
 import 'package:pomodoro_flutter/enums/processing_state.dart';
+import 'package:pomodoro_flutter/services/i_10n.dart';
 import 'package:pomodoro_flutter/utils/consts/settings_constant.dart';
 
 class ProcessingProvider with ChangeNotifier {
@@ -33,7 +34,6 @@ class ProcessingProvider with ChangeNotifier {
   Processing get processing => _processing;
 
   void changeState(ProcessingState state, {bool interactiveDelay = false}) {
-    eventBus.emit(NotificationFactory.creatSoundEvent());
     void handlerCb(bool withSound) {
       _processing = _processing.copyWithNewState(state);
       eventBus.emit(
@@ -46,6 +46,7 @@ class ProcessingProvider with ChangeNotifier {
     }
 
     if (interactiveDelay) {
+      eventBus.emit(NotificationFactory.creatSoundEvent());
       _delayedHandler(handlerCb, (withSound) {
         _processing = _processing.copyWithNewState(state);
         eventBus.emit(
@@ -55,7 +56,7 @@ class ProcessingProvider with ChangeNotifier {
           ),
         );
         notifyListeners();
-      }, 'Пора сделать перерыв!');
+      }, I10n().t.delayedRestLabel);
     } else {
       handlerCb(false);
     }

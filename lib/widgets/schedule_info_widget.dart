@@ -20,7 +20,7 @@ class ScheduleInfoWidget extends StatelessWidget {
     if (schedule.isActiveNow()) {
       final endTime = schedule.currentPeriodEnd();
       if (endTime != null) {
-        return I10n().t.schedultWillEndAt(_formatTime(endTime));
+        return I10n().t.scheduleWillEndAt(_formatTime(endTime));
       }
     } else {
       try {

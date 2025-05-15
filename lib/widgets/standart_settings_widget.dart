@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pomodoro_flutter/enums/alert_level.dart';
 import 'package:pomodoro_flutter/providers/settings_provider.dart';
 import 'package:pomodoro_flutter/services/i_10n.dart';
 import 'package:pomodoro_flutter/utils/consts/settings_constant.dart';
@@ -19,12 +20,12 @@ class StandartSettingsWidget extends StatelessWidget {
            title:
               "${I10n().t.operationModeLabel} ${I10n().t.pomodoroModeLabel_custom}",
           description:
-              I10n().t.scheduleCustomModeDesctiption,
-          color: Colors.blue[50],
+              I10n().t.scheduleCustomModeDescription,
+          level: AlertLevel.info,
         ),
         const SizedBox(height: 16),
         Text(
-          '${I10n().t.sesstionDuretionLabel} ${settings.userSessionDurationInSeconds ~/ 60} ${I10n().t.unitShort_minute}',
+          '${I10n().t.sessionDurationLabel} ${settings.userSessionDurationInSeconds ~/ 60} ${I10n().t.unitShort_minute}',
           style: TextStyle(fontSize: 18.8, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 8),

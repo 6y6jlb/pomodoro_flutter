@@ -6,7 +6,7 @@ enum PomodoroMode { standard, scheduleBased }
 
 extension Label on PomodoroMode {
   String label() {
-    return isScheduleBased() ? I10n().t.pomoodoroModeLabel_schedule : I10n().t.pomodoroModeLabel_custom;
+    return isScheduleBased() ? I10n().t.pomodoroModeLabel_schedule : I10n().t.pomodoroModeLabel_custom;
   }
 }
 

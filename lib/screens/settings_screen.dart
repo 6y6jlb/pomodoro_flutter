@@ -24,7 +24,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.green[400],
         title: Text(I10n().t.settingsScreenTitle, style: AppTextStyles.title),
       ),
       body: Padding(
@@ -36,7 +35,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  'Режим работы:',
+                  I10n().t.operationModeLabel,
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
                 SizedBox(width: 10),

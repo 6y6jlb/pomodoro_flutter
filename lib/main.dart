@@ -9,6 +9,7 @@ import 'package:pomodoro_flutter/providers/settings_provider.dart';
 import 'package:pomodoro_flutter/screens/home_screen.dart';
 import 'package:pomodoro_flutter/enums/pomodoro_mode_adapter.dart';
 import 'package:pomodoro_flutter/services/i_10n.dart';
+import 'package:pomodoro_flutter/theme/AlertColors';
 import 'package:pomodoro_flutter/utils/datetime/time_period.dart';
 import 'package:pomodoro_flutter/widgets/listeners/global_delayed_action_listener.dart';
 import 'package:pomodoro_flutter/widgets/listeners/global_snackbar_listener.dart';
@@ -38,7 +39,10 @@ void main() async {
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => NotificationProvider()),
+        ChangeNotifierProvider(
+          create: (_) => NotificationProvider(),
+          lazy: false,
+        ),
         ChangeNotifierProvider(create: (_) => settingsProvider),
         ChangeNotifierProxyProvider<SettingsProvider, ProcessingProvider>(
           create: (_) => ProcessingProvider(settingsProvider.settings),
@@ -65,12 +69,45 @@ class App extends StatelessWidget {
           seedColor: Colors.green,
           brightness: Brightness.light,
         ),
+        appBarTheme: AppBarTheme(
+          backgroundColor: Colors.green[400],
+          foregroundColor: Colors.black,
+        ),
+        snackBarTheme: SnackBarThemeData(
+          backgroundColor: Colors.green[400],
+          contentTextStyle: TextStyle(color: Colors.white),
+        ),
+         extensions: [
+          AlertColors(
+            info: Colors.blue.shade800,
+            warning: Colors.orange.shade800,
+            success: Colors.green.shade800,
+            danger: Colors.red.shade800,
+          ),
+        ],
       ),
       darkTheme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.green,
+          seedColor: Colors.green[800]!,
           brightness: Brightness.dark,
         ),
+        appBarTheme: AppBarTheme(
+          backgroundColor: Colors.green[900], 
+          foregroundColor: Colors.white,
+        ),
+        snackBarTheme: SnackBarThemeData(
+          backgroundColor: Colors.green[800],
+          contentTextStyle: TextStyle(color: Colors.white),
+        ),
+        useMaterial3: true,
+          extensions: [
+          AlertColors(
+            info: Colors.blue.shade800,
+            warning: Colors.orange.shade800,
+            success: Colors.green.shade800,
+            danger: Colors.red.shade800,
+          ),
+        ],
       ),
       themeMode: ThemeMode.system,
       home: GlobalDelayedActionListener(
@@ -87,7 +124,7 @@ class App extends StatelessWidget {
 
         return const Locale('en', '');
       },
-        builder: (context, child) {
+      builder: (context, child) {
         // Инициализация сервиса локализации
         I10n().initialize(context);
         return child!;

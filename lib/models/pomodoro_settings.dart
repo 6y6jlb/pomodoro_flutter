@@ -40,6 +40,10 @@ class PomodoroSettings {
         : userSessionDurationInSeconds;
   }
 
+  int get currentBreakDurationInMinutes => currentBreakDurationInSeconds ~/ 60;
+
+  int get currentSessionDurationInMinutes => currentSessionDurationInSeconds ~/ 60;
+
   bool get isActive {
     if (mode == PomodoroMode.scheduleBased) {
       return schedule.isActiveNow();
