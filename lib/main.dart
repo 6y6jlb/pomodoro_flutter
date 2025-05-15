@@ -9,7 +9,7 @@ import 'package:pomodoro_flutter/providers/settings_provider.dart';
 import 'package:pomodoro_flutter/screens/home_screen.dart';
 import 'package:pomodoro_flutter/enums/pomodoro_mode_adapter.dart';
 import 'package:pomodoro_flutter/services/i_10n.dart';
-import 'package:pomodoro_flutter/theme/AlertColors';
+import 'package:pomodoro_flutter/theme/allert_colors.dart';
 import 'package:pomodoro_flutter/theme/processing_colors.dart';
 import 'package:pomodoro_flutter/utils/datetime/time_period.dart';
 import 'package:pomodoro_flutter/widgets/listeners/global_delayed_action_listener.dart';

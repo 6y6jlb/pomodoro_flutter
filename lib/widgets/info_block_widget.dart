@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pomodoro_flutter/enums/alert_level.dart';
-import 'package:pomodoro_flutter/theme/AlertColors';
+import 'package:pomodoro_flutter/theme/allert_colors.dart';
 
 class InfoBlockWidget extends StatelessWidget {
   final String title;
