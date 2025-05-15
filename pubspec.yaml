@@ -20,7 +20,7 @@ version: 1.0.0+1
 
 flutter_icons:
     android: true
-    image_path: "assets/image/pomodoro-icon-vol2.png"
+    image_path: "assets/image/pomodoro-icon-vol3.png"
 
 environment:
   sdk: ^3.7.0
@@ -45,6 +45,7 @@ dependencies:
   intl: any
   provider: ^6.1.2
   time_range_picker: ^2.3.0
+  vibration: ^3.1.3
 
 
 
