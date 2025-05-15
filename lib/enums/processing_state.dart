@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pomodoro_flutter/services/i_10n.dart';
+import 'package:pomodoro_flutter/theme/processing_colors.dart';
 
 enum ProcessingState { rest, activity, inactivity, restDelay }
 
@@ -26,12 +27,12 @@ extension Label on ProcessingState {
 }
 
 extension ColorLevel on ProcessingState {
-  Color colorLevel() {
-    Map<ProcessingState, Color?> colorLevels = {
-      ProcessingState.activity: Colors.green[300],
-      ProcessingState.inactivity: Colors.grey[500],
-      ProcessingState.rest: Colors.blue[400],
-      ProcessingState.restDelay: Colors.deepPurple[300],
+  Color colorLevel(ProcessingColors colors) {
+    Map<ProcessingState, Color> colorLevels = {
+      ProcessingState.activity: colors.activity,
+      ProcessingState.inactivity: colors.inactivity,
+      ProcessingState.rest: colors.rest,
+      ProcessingState.restDelay: colors.restDelay,
     };
     return colorLevels[this] ?? Colors.blueGrey;
   }

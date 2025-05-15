@@ -5,11 +5,13 @@ class TimerCirclePainter extends CustomPainter {
   final double progress;
   final Color fillColor;
   final String timeText;
+  final Color? backgroundColor;
 
   TimerCirclePainter({
     required this.progress,
     required this.fillColor,
     required this.timeText,
+    this.backgroundColor,
   });
 
   @override
@@ -19,7 +21,7 @@ class TimerCirclePainter extends CustomPainter {
 
     final backgroundPaint =
         Paint()
-          ..color = Colors.grey[300]!
+          ..color = backgroundColor ?? Colors.grey[300]!
           ..style = PaintingStyle.stroke
           ..strokeWidth = 10;
 

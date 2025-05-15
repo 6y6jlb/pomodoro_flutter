@@ -10,6 +10,7 @@ import 'package:pomodoro_flutter/screens/home_screen.dart';
 import 'package:pomodoro_flutter/enums/pomodoro_mode_adapter.dart';
 import 'package:pomodoro_flutter/services/i_10n.dart';
 import 'package:pomodoro_flutter/theme/AlertColors';
+import 'package:pomodoro_flutter/theme/processing_colors.dart';
 import 'package:pomodoro_flutter/utils/datetime/time_period.dart';
 import 'package:pomodoro_flutter/widgets/listeners/global_delayed_action_listener.dart';
 import 'package:pomodoro_flutter/widgets/listeners/global_snackbar_listener.dart';
@@ -71,7 +72,7 @@ class App extends StatelessWidget {
         ),
         appBarTheme: AppBarTheme(
           backgroundColor: Colors.green[400],
-          foregroundColor: Colors.black,
+          foregroundColor: Colors.white,
         ),
         snackBarTheme: SnackBarThemeData(
           backgroundColor: Colors.green[400],
@@ -83,6 +84,12 @@ class App extends StatelessWidget {
             warning: Colors.orange.shade800,
             success: Colors.green.shade800,
             danger: Colors.red.shade800,
+          ),
+          ProcessingColors(
+            activity: Colors.green[300]!,
+            inactivity: Colors.grey[500]!,
+            rest: Colors.blue[400]!,
+            restDelay: Colors.deepPurple[300]!,
           ),
         ],
       ),
@@ -106,6 +113,12 @@ class App extends StatelessWidget {
             warning: Colors.orange.shade800,
             success: Colors.green.shade800,
             danger: Colors.red.shade800,
+          ),
+          ProcessingColors(
+            activity: Colors.green[800]!,
+            inactivity: Colors.grey[700]!,
+            rest: Colors.blue[900]!,
+            restDelay: Colors.deepPurple[800]!,
           ),
         ],
       ),

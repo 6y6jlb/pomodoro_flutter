@@ -70,7 +70,8 @@ class _AnimatedCircleTimerState extends State<AnimatedCircleTimer>
 
   @override
   Widget build(BuildContext context) {
-    final remainingSeconds = ((1 - _animation.value) * widget.totalSeconds).round();
+    final remainingSeconds =
+        ((1 - _animation.value) * widget.totalSeconds).round();
     final formattedTime = _formatTime(remainingSeconds);
     return Stack(
       alignment: Alignment.center,
@@ -81,6 +82,8 @@ class _AnimatedCircleTimerState extends State<AnimatedCircleTimer>
             progress: _animation.value,
             fillColor: widget.fillColor,
             timeText: formattedTime,
+            backgroundColor:
+                Theme.of(context).colorScheme.surfaceContainerHighest,
           ),
         ),
         if (widget.upperWidget != null)
@@ -89,10 +92,7 @@ class _AnimatedCircleTimerState extends State<AnimatedCircleTimer>
             child: widget.upperWidget!,
           ),
         if (widget.bottomWidget != null)
-          Positioned(
-            bottom: 16,
-            child: widget.bottomWidget!,
-          ),
+          Positioned(bottom: 16, child: widget.bottomWidget!),
       ],
     );
   }

@@ -53,11 +53,11 @@ class _DelayedActionWidgetState extends State<DelayedActionWidget> {
         width: 300,
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: Theme.of(context).colorScheme.surface,
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.2),
+              color: Colors.black54,
               blurRadius: 10,
               offset: const Offset(0, 4),
             ),
@@ -81,7 +81,9 @@ class _DelayedActionWidgetState extends State<DelayedActionWidget> {
               children: [
                 ElevatedButton(
                   onPressed: widget.onPostpone,
-                  child: Text("${I10n().t.action_delay} (${I10n().t.unitShort_minute})"),
+                  child: Text(
+                    "${I10n().t.action_delay} (${I10n().t.unitShort_minute})",
+                  ),
                 ),
                 ElevatedButton(
                   onPressed: widget.onConfirm,

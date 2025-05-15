@@ -52,7 +52,7 @@ class ProcessingProvider with ChangeNotifier {
         eventBus.emit(
           NotificationFactory.createStateUpdateEvent(
             message: ProcessingState.restDelay.label(),
-            withSound: false,
+            withSound: withSound,
           ),
         );
         notifyListeners();

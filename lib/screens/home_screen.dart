@@ -38,7 +38,6 @@ class _HomeScreenState extends State<HomeScreen> {
             },
             icon: Icon(
               Icons.settings,
-              color: Theme.of(context).iconTheme.color,
             ),
           ),
         ],

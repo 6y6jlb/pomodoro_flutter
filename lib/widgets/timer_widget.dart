@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pomodoro_flutter/providers/processing_provider.dart';
 import 'package:pomodoro_flutter/services/i_10n.dart';
+import 'package:pomodoro_flutter/theme/processing_colors.dart';
 import 'package:pomodoro_flutter/utils/styles/app_text_styles.dart';
 import 'package:pomodoro_flutter/enums/processing_state.dart';
 import 'package:pomodoro_flutter/widgets/animated_circle_times.dart';
@@ -15,8 +16,10 @@ class TimerWidget extends StatelessWidget {
     final processing = processingProvider.processing;
     final settings = processingProvider.settings;
 
-    ButtonStyle commonButtonStyles = ElevatedButton.styleFrom(
-      backgroundColor: processing.state.colorLevel(),
+ButtonStyle commonButtonStyles = ElevatedButton.styleFrom(
+      backgroundColor: processing.state.colorLevel(
+        Theme.of(context).extension<ProcessingColors>()!,
+      ),
     );
 
     Widget buildBottomActionWidget() {
@@ -63,7 +66,9 @@ class TimerWidget extends StatelessWidget {
     return AnimatedCircleTimer(
       key: ValueKey(processing.state),
       totalSeconds: processing.periodDurationInSeconds,
-      fillColor: processing.state.colorLevel(),
+     fillColor: processing.state.colorLevel(
+        Theme.of(context).extension<ProcessingColors>()!,
+      ),
       bottomWidget: buildBottomActionWidget(),
       upperWidget: buildUpperActionWidget(),
       onTimerComplete: () {
