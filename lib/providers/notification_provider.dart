@@ -6,6 +6,7 @@ import 'package:pomodoro_flutter/event_bus/event_bus_provider.dart';
 import 'package:pomodoro_flutter/event_bus/typed_event_bus.dart';
 import 'package:pomodoro_flutter/services/notification_service.dart';
 import 'package:pomodoro_flutter/services/sound_service.dart';
+import 'package:pomodoro_flutter/services/vibration_service.dart';
 
 class NotificationProvider with ChangeNotifier {
   final NotificationService _notificationService = NotificationService();
@@ -31,8 +32,12 @@ class NotificationProvider with ChangeNotifier {
       _soundService.playSound(event.soundKey!);
     }
 
-    if (event.type != 'sound' && event.message != null) {
+    if (event.type == 'background') {
+      _notificationService.showNotification('Background Event', event.message!);
+      VibrationService.vibrate(duration: 1000);
+    } else if (event.type != 'sound' && event.message != null) {
       _notificationService.showNotification(event.type, event.message!);
+      VibrationService.vibrate(duration: 500);
     }
   }
 }

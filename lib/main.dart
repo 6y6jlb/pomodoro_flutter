@@ -1,3 +1,5 @@
+import 'dart:isolate';
+
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -8,7 +10,10 @@ import 'package:pomodoro_flutter/providers/processing_provider.dart';
 import 'package:pomodoro_flutter/providers/settings_provider.dart';
 import 'package:pomodoro_flutter/screens/home_screen.dart';
 import 'package:pomodoro_flutter/enums/pomodoro_mode_adapter.dart';
+import 'package:pomodoro_flutter/services/background_service.dart';
 import 'package:pomodoro_flutter/services/i_10n.dart';
+import 'package:pomodoro_flutter/services/notification_service.dart';
+import 'package:pomodoro_flutter/services/vibration_service.dart';
 import 'package:pomodoro_flutter/theme/allert_colors.dart';
 import 'package:pomodoro_flutter/theme/processing_colors.dart';
 import 'package:pomodoro_flutter/utils/datetime/time_period.dart';
@@ -30,12 +35,39 @@ void main() async {
   Hive.registerAdapter(PomodoroSettingsAdapter());
 
   await Hive.openBox('settings');
+  final timerStateBox = await Hive.openBox('timerState');
 
   // Инициализируем локализацию
   await initializeDateFormatting('ru_RU', null);
 
   // Создаем провайдеры
   final settingsProvider = SettingsProvider();
+
+  // Создаем канал для общения с фоновым изолятом
+  final receivePort = ReceivePort();
+  BackgroundService.initialize(receivePort.sendPort);
+
+  // Обработка сообщений от фонового сервиса
+  receivePort.listen((message) async {
+    if (message['action'] == 'check_timer') {
+      final remainingTime = timerStateBox.get('remainingTime', defaultValue: 60);
+
+      if (remainingTime != null && remainingTime <= 0) {
+        print("Timer completed, sending notification");
+
+        // Отправляем уведомление
+        final notificationService = NotificationService();
+        await notificationService.init();
+        await notificationService.showNotification("Pomodoro Timer", "Your timer has completed!");
+
+        // Запускаем вибрацию
+        VibrationService.vibrate(duration: 1000);
+
+        // Сбрасываем таймер
+        await timerStateBox.put('remainingTime', 0);
+      }
+    }
+  });
 
   runApp(
     MultiProvider(

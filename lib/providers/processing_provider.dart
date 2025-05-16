@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:pomodoro_flutter/events/delayed_action_event.dart';
 import 'package:pomodoro_flutter/factories/notification_factory.dart';
@@ -10,25 +9,24 @@ import 'package:pomodoro_flutter/event_bus/typed_event_bus.dart';
 import 'package:pomodoro_flutter/enums/processing_state.dart';
 import 'package:pomodoro_flutter/services/i_10n.dart';
 import 'package:pomodoro_flutter/utils/consts/settings_constant.dart';
+import 'package:hive/hive.dart';
 
-class ProcessingProvider with ChangeNotifier {
+class ProcessingProvider with ChangeNotifier, WidgetsBindingObserver {
   Processing _processing = Processing(state: ProcessingState.inactivity);
   PomodoroSettings? settings;
-
   int _remainingTime = SettingsConstant.defaultRemaingDurationInSeconds;
+  bool _isAppActive = true;
   Timer? _lazyConfirmationTimer;
 
   ProcessingProvider([PomodoroSettings? settings]) {
+    WidgetsBinding.instance.addObserver(this);
     if (settings != null) {
       updateSettings(settings);
     } else {
       _processing = Processing(state: ProcessingState.inactivity);
     }
 
-    _processing = Processing(
-      settings: settings,
-      state: ProcessingState.inactivity,
-    );
+    _processing = Processing(settings: settings, state: ProcessingState.inactivity);
   }
 
   Processing get processing => _processing;
@@ -36,12 +34,17 @@ class ProcessingProvider with ChangeNotifier {
   void changeState(ProcessingState state, {bool interactiveDelay = false}) {
     void handlerCb(bool withSound) {
       _processing = _processing.copyWithNewState(state);
-      eventBus.emit(
-        NotificationFactory.createStateUpdateEvent(
-          message: _processing.state.label(),
-          withSound: withSound,
-        ),
-      );
+
+      if (!isAppActive) {
+        eventBus.emit(
+          NotificationFactory.createBackgroundEvent(message: _processing.state.label(), withSound: withSound),
+        );
+      } else {
+        eventBus.emit(
+          NotificationFactory.createStateUpdateEvent(message: _processing.state.label(), withSound: withSound),
+        );
+      }
+
       notifyListeners();
     }
 
@@ -50,10 +53,7 @@ class ProcessingProvider with ChangeNotifier {
       _delayedHandler(handlerCb, (withSound) {
         _processing = _processing.copyWithNewState(state);
         eventBus.emit(
-          NotificationFactory.createStateUpdateEvent(
-            message: ProcessingState.restDelay.label(),
-            withSound: withSound,
-          ),
+          NotificationFactory.createStateUpdateEvent(message: ProcessingState.restDelay.label(), withSound: withSound),
         );
         notifyListeners();
       }, I10n().t.delayedRestLabel);
@@ -64,10 +64,7 @@ class ProcessingProvider with ChangeNotifier {
 
   void updateSettings(PomodoroSettings newSettings) {
     settings = newSettings;
-    _processing = Processing(
-      settings: settings!,
-      state: ProcessingState.inactivity,
-    );
+    _processing = Processing(settings: settings!, state: ProcessingState.inactivity);
     notifyListeners();
   }
 
@@ -91,17 +88,50 @@ class ProcessingProvider with ChangeNotifier {
     );
     eventBus.emit(NotificationFactory.creatSoundEvent());
     _remainingTime = SettingsConstant.defaultRemaingDurationInSeconds;
-    _lazyConfirmationTimer
-        ?.cancel(); // Отменяем предыдущий таймер, если он существует
-    _lazyConfirmationTimer = Timer.periodic(const Duration(seconds: 1), (
-      timer,
-    ) {
+    _lazyConfirmationTimer?.cancel(); // Отменяем предыдущий таймер, если он существует
+    _lazyConfirmationTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
       _remainingTime--;
 
       if (_remainingTime <= 0) {
         timer.cancel();
         confirmationCallback(true);
       }
+
+      saveRemainingTime(_remainingTime);
     });
+  }
+
+
+  Future<void> saveRemainingTime(int remainingTime) async {
+    final box = await Hive.openBox('timerState');
+    await box.put('remainingTime', remainingTime);
+  }
+
+  Future<void> loadRemainingTime() async {
+    final box = await Hive.openBox('timerState');
+    final savedTime = box.get('remainingTime', defaultValue: SettingsConstant.defaultRemaingDurationInSeconds);
+    _remainingTime = savedTime;
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    print('AppLifecycleState changed: $state');
+    _isAppActive = state == AppLifecycleState.resumed;
+
+    if (!_isAppActive) {
+      // Сохраняем состояние таймера
+      saveRemainingTime(_remainingTime);
+    } else {
+      // Восстанавливаем состояние таймера
+      loadRemainingTime();
+    }
+  }
+
+  bool get isAppActive => _isAppActive;
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
   }
 }

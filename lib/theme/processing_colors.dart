@@ -6,20 +6,10 @@ class ProcessingColors extends ThemeExtension<ProcessingColors> {
   final Color rest;
   final Color restDelay;
 
-  ProcessingColors({
-    required this.activity,
-    required this.inactivity,
-    required this.rest,
-    required this.restDelay,
-  });
+  ProcessingColors({required this.activity, required this.inactivity, required this.rest, required this.restDelay});
 
   @override
-  ThemeExtension<ProcessingColors> copyWith({
-    Color? activity,
-    Color? inactivity,
-    Color? rest,
-    Color? restDelay,
-  }) {
+  ThemeExtension<ProcessingColors> copyWith({Color? activity, Color? inactivity, Color? rest, Color? restDelay}) {
     return ProcessingColors(
       activity: activity ?? this.activity,
       inactivity: inactivity ?? this.inactivity,
@@ -29,10 +19,7 @@ class ProcessingColors extends ThemeExtension<ProcessingColors> {
   }
 
   @override
-  ThemeExtension<ProcessingColors> lerp(
-    ThemeExtension<ProcessingColors>? other,
-    double t,
-  ) {
+  ThemeExtension<ProcessingColors> lerp(ThemeExtension<ProcessingColors>? other, double t) {
     if (other is! ProcessingColors) return this;
     return ProcessingColors(
       activity: Color.lerp(activity, other.activity, t)!,

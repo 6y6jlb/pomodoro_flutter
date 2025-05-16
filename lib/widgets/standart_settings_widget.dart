@@ -17,10 +17,8 @@ class StandartSettingsWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         InfoBlockWidget(
-           title:
-              "${I10n().t.operationModeLabel} ${I10n().t.pomodoroModeLabel_custom}",
-          description:
-              I10n().t.scheduleCustomModeDescription,
+          title: "${I10n().t.operationModeLabel} ${I10n().t.pomodoroModeLabel_custom}",
+          description: I10n().t.scheduleCustomModeDescription,
           level: AlertLevel.info,
         ),
         const SizedBox(height: 16),
@@ -34,10 +32,7 @@ class StandartSettingsWidget extends StatelessWidget {
           min: SettingsConstant.minSessionDurationInSeconds.toDouble(),
           max: SettingsConstant.maxSessionDurationInSeconds.toDouble(),
           onChanged: (value) {
-            Provider.of<SettingsProvider>(
-              context,
-              listen: false,
-            ).updateUserSesstionDuration(value.toInt());
+            Provider.of<SettingsProvider>(context, listen: false).updateUserSesstionDuration(value.toInt());
           },
         ),
         const SizedBox(height: 16),
@@ -51,10 +46,7 @@ class StandartSettingsWidget extends StatelessWidget {
           min: SettingsConstant.minBreakDurationInSeconds.toDouble(),
           max: SettingsConstant.maxBreakDurationInSeconds.toDouble(),
           onChanged: (value) {
-            Provider.of<SettingsProvider>(
-              context,
-              listen: false,
-            ).updateUserBreaknDuration(value.toInt());
+            Provider.of<SettingsProvider>(context, listen: false).updateUserBreaknDuration(value.toInt());
           },
         ),
       ],
