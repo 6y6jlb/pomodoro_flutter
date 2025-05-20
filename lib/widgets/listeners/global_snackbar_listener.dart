@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:pomodoro_flutter/events/notification_events.dart';
 import 'package:pomodoro_flutter/event_bus/event_bus_provider.dart';
-import 'package:pomodoro_flutter/event_bus/typed_event_bus.dart';
 
 class GlobalSnackbarListener extends StatefulWidget {
   final Widget child;

@@ -6,7 +6,6 @@ import 'package:pomodoro_flutter/models/pomodoro_settings.dart';
 import 'package:pomodoro_flutter/models/schedule.dart';
 import 'package:pomodoro_flutter/enums/pomodoro_mode.dart';
 import 'package:pomodoro_flutter/event_bus/event_bus_provider.dart';
-import 'package:pomodoro_flutter/event_bus/typed_event_bus.dart';
 import 'package:pomodoro_flutter/utils/datetime/time_period.dart';
 
 class SettingsProvider with ChangeNotifier {

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pomodoro_flutter/events/delayed_action_event.dart';
 import 'package:pomodoro_flutter/event_bus/event_bus_provider.dart';
-import 'package:pomodoro_flutter/event_bus/typed_event_bus.dart';
 import 'package:pomodoro_flutter/widgets/delayed_action_widget.dart';
 
 class GlobalDelayedActionListener extends StatefulWidget {

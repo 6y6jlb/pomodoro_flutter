@@ -3,7 +3,6 @@ import 'package:pomodoro_flutter/factories/notification_factory.dart';
 import 'package:pomodoro_flutter/event_bus/event_bus_provider.dart';
 import 'package:pomodoro_flutter/providers/settings_provider.dart';
 import 'package:pomodoro_flutter/enums/pomodoro_mode.dart';
-import 'package:pomodoro_flutter/event_bus/typed_event_bus.dart';
 import 'package:pomodoro_flutter/services/i_10n.dart';
 import 'package:pomodoro_flutter/utils/styles/app_text_styles.dart';
 import 'package:pomodoro_flutter/widgets/schedule_settings_widget.dart';
