@@ -6,6 +6,7 @@ class TimerService {
   static const String _taskId = 'pomodoro_timer_task';
 
   Future<void> scheduleTimerTask(int durationInSeconds) async {
+    print('Scheduling timer task for $durationInSeconds seconds');
     await Workmanager().registerOneOffTask(
       _taskId,
       _taskId,

@@ -40,13 +40,12 @@ class ProcessingProvider with ChangeNotifier, WidgetsBindingObserver {
   }
 
   void changeState(ProcessingState state, {bool interactiveDelay = false}) {
+    print('changeState: ' + state.label());
     void handlerCb(bool withSound) {
       _processing = _processing.copyWithNewState(state);
 
       if (!_isAppActive) {
-        eventBus.emit(
-          NotificationFactory.createBackgroundEvent(message: _processing.state.label(), withSound: withSound),
-        );
+        _timerService.scheduleTimerTask(_processing.periodDurationInSeconds);
       } else {
         eventBus.emit(
           NotificationFactory.createStateUpdateEvent(message: _processing.state.label(), withSound: withSound),
@@ -71,16 +70,14 @@ class ProcessingProvider with ChangeNotifier, WidgetsBindingObserver {
   }
 
   void makeNextPeriod({bool background = true}) {
-    final nextState = _processing.getNextProcessingState();
-    changeState(nextState, interactiveDelay: true);
-
-    // Планируем задачу Workmanager
-    _timerService.scheduleTimerTask(_processing.periodDurationInSeconds);
+    changeState(_processing.getNextProcessingState(), interactiveDelay: true);
+  
   }
 
   void resetTimer() {
+    print('resetTimes');
     _lazyConfirmationTimer?.cancel();
-    _remainingTime = SettingsConstant.defaultRemaingDurationInSeconds;
+    _remainingTime = 0;
     _timerService.cancelTimerTask();
     _timerService.saveRemainingTime(_remainingTime);
     _processing = _processing.copyWithNewState(ProcessingState.inactivity);
@@ -117,6 +114,7 @@ class ProcessingProvider with ChangeNotifier, WidgetsBindingObserver {
 
   Future<void> _loadRemainingTime() async {
     _remainingTime = await _timerService.loadRemainingTime();
+    print('_loadRemainingTime: $_remainingTime');
     notifyListeners();
   }
 
