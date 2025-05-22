@@ -9,10 +9,11 @@ class AppInitializer {
     if (!isBackground) {
       await _initializeForeground();
     }
-    await _initializeHive();
+    await _initializeHive(isBackground: isBackground);
   }
 
   static Future<void> _initializeForeground() async {
+    print('Foreground initialization');
     await Permission.notification.request();
     await initializeDateFormatting('ru_RU', null);
     WorkmanagerService.initialize();

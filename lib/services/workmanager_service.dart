@@ -10,7 +10,9 @@ class WorkmanagerService {
 
   @pragma('vm:entry-point')
   static void callbackDispatcher() {
+    print('Workmanager callbackDispatcher called');
     Workmanager().executeTask((task, inputData) async {
+      print('Workmanager task executed: $task');
       await AppInitializer.initializeApp(isBackground: true);
       return TaskHandler.executeTask(task, inputData);
     });
