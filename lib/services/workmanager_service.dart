@@ -5,6 +5,7 @@ import 'package:workmanager/workmanager.dart';
 @pragma('vm:entry-point')
 class WorkmanagerService {
   static void initialize() {
+    print('WorkmanagerService.initialize called');
     Workmanager().initialize(callbackDispatcher, isInDebugMode: true);
   }
 

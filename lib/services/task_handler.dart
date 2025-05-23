@@ -1,4 +1,5 @@
 import 'package:pomodoro_flutter/enums/processing_state.dart';
+import 'package:pomodoro_flutter/services/i_10n.dart';
 import 'package:pomodoro_flutter/services/notification_service.dart';
 import 'package:pomodoro_flutter/services/processing_service.dart';
 import 'package:pomodoro_flutter/services/vibration_service.dart';
@@ -8,6 +9,7 @@ import 'package:pomodoro_flutter/utils/consts/constant.dart';
 class TaskHandler {
   @pragma('vm:entry-point')
   static Future<bool> executeTask(String task, Map<String, dynamic>? inputData) async {
+    print('TaskHandler.executeTask: $task');
     try {
       final notificationService = NotificationService();
       await notificationService.init();
@@ -17,7 +19,7 @@ class TaskHandler {
         final remainingTime = await processingService.loadRemainingTime();
         final isRunning = await processingService.loadTimerState();
         final nextState = await processingService.loadNextProcessingState();
-
+        print('TaskHandler.executeTask: remainingTime: $remainingTime, isRunning: $isRunning, nextState: $nextState');
         // Проверяем, активен ли таймер и не завершен ли он уже
         if (isRunning && remainingTime > 0) {
           await processingService.saveRemainingTime(0);
@@ -27,7 +29,7 @@ class TaskHandler {
 
           await notificationService.showNotification(
             'Pomodoro Timer',
-            'Таймер завершён! Переходим к состоянию: $nextState',
+             I10n().t.notification_stateChanged(nextState),
           );
           VibrationService.vibrate(duration: 1000);
         }

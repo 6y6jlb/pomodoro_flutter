@@ -48,29 +48,33 @@ class ProcessingProvider with ChangeNotifier, WidgetsBindingObserver {
   }
 
   void changeState(ProcessingState state, {bool interactiveDelay = false}) {
-    print('changeState: ${state.label()}');
+    print('changeState: state - ${state.label()}, interactiveDelay - $interactiveDelay');
     void handlerCb(bool withSound) {
       _processing = _processing.copyWithNewState(state);
       _remainingTime = _processing.periodDurationInSeconds;
       _saveState();
 
-      if (!_isAppActive) {
-        print("App is not active");
-        _processingService.scheduleTimerTask(_remainingTime);
-      } else {
+      if (_isAppActive) {
         eventBus.emit(
           NotificationFactory.createStateUpdateEvent(message: _processing.state.label(), withSound: withSound),
         );
+      } else {
+        print("changeState: app is not active");
+        _processingService.scheduleTimerTask(_remainingTime);
       }
 
+      var nextState = _processing.getNextProcessingState();
+
+      print('changeState: startTimer: $_remainingTime, nextState: ${nextState.label()}');
       _timerService.startTimer(
         _remainingTime,
         (time) => updateRemainingTime(time),
-        () => changeState(_processing.getNextProcessingState(), interactiveDelay: true),
+        state.isInactive() ? () => {} : () => changeState(nextState, interactiveDelay: nextState.isRest()),
       );
       notifyListeners();
     }
 
+    print('interactiveDelay: $interactiveDelay');
     if (interactiveDelay) {
       eventBus.emit(NotificationFactory.creatSoundEvent());
       _delayedHandler(handlerCb, (withSound) {
@@ -84,10 +88,6 @@ class ProcessingProvider with ChangeNotifier, WidgetsBindingObserver {
     } else {
       handlerCb(false);
     }
-  }
-
-  void makeNextPeriod({bool background = true}) {
-    changeState(_processing.getNextProcessingState(), interactiveDelay: true);
   }
 
   void resetTimer() {
@@ -106,6 +106,7 @@ class ProcessingProvider with ChangeNotifier, WidgetsBindingObserver {
     void Function(bool withSound) cancellationCallback,
     String message,
   ) {
+    print('_delayedHandler: $message');
     eventBus.emit(
       DelayedActionEvent(
         type: 'state_change',
@@ -172,14 +173,14 @@ class ProcessingProvider with ChangeNotifier, WidgetsBindingObserver {
     print('AppLifecycleState changed: $state');
     _isAppActive = state == AppLifecycleState.resumed;
 
-    if (!_isAppActive) {
+    if (_isAppActive) {
+      _loadState();
+      _processingService.cancelTimerTask();
+    } else {
       _saveState();
       if (_remainingTime > 0) {
         _processingService.scheduleTimerTask(_remainingTime);
       }
-    } else {
-      _loadState();
-      _processingService.cancelTimerTask();
     }
   }
 

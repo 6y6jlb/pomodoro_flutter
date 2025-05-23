@@ -54,15 +54,4 @@ class NotificationFactory {
       soundKey: soundKey,
     );
   }
-
-  static NotificationEvent createBackgroundEvent({
-    required String message,
-    bool withSound = false,
-  }) {
-    return NotificationEvent(
-      type: 'background',
-      message: message,
-      soundKey: withSound ? 'default' : null,
-    );
-  }
 }

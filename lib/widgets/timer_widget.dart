@@ -70,12 +70,6 @@ ButtonStyle commonButtonStyles = ElevatedButton.styleFrom(
       ),
       bottomWidget: buildBottomActionWidget(),
       upperWidget: buildUpperActionWidget(),
-      onTimerComplete: () {
-        Provider.of<ProcessingProvider>(
-          context,
-          listen: false,
-        ).makeNextPeriod();
-      },
     );
   }
 }

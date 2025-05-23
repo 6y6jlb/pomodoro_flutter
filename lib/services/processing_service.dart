@@ -4,13 +4,12 @@ import 'package:pomodoro_flutter/utils/consts/settings_constant.dart';
 import 'package:workmanager/workmanager.dart';
 
 class ProcessingService {
-  static const String _taskId = 'pomodoro_timer_task';
 
   Future<void> scheduleTimerTask(int durationInSeconds) async {
     print('Scheduling timer task for $durationInSeconds seconds');
     await Workmanager().registerOneOffTask(
-      _taskId,
-      _taskId,
+      AppConstants.pomodoroTimerTask,
+      AppConstants.pomodoroTimerTask,
       initialDelay: Duration(seconds: durationInSeconds),
       constraints: Constraints(networkType: NetworkType.not_required),
     );

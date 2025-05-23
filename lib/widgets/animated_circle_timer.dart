@@ -5,14 +5,12 @@ import 'package:provider/provider.dart';
 
 class AnimatedCircleTimer extends StatelessWidget {
   final Color fillColor;
-  final VoidCallback onTimerComplete;
   final Widget? upperWidget;
   final Widget? bottomWidget;
 
   const AnimatedCircleTimer({
     super.key,
     required this.fillColor,
-    required this.onTimerComplete,
     this.upperWidget,
     this.bottomWidget,
   });

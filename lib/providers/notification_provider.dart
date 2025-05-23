@@ -28,15 +28,10 @@ class NotificationProvider with ChangeNotifier {
 
   void _handleNotificationEvent(NotificationEvent event) {
     if (event.soundKey != null) {
+      print('Playing sound: ${event.soundKey}');
       _soundService.playSound(event.soundKey!);
     }
 
-    if (event.type == 'background') {
-      _notificationService.showNotification('Background Event', event.message!);
-      VibrationService.vibrate(duration: 1000);
-    } else if (event.type != 'sound' && event.message != null) {
-      _notificationService.showNotification(event.type, event.message!);
-      VibrationService.vibrate(duration: 500);
-    }
+    VibrationService.vibrate(duration: 500);
   }
 }
