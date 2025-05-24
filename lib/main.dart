@@ -7,11 +7,9 @@ import 'package:pomodoro_flutter/widgets/app.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
-  // Инициализируем Flutter
   WidgetsFlutterBinding.ensureInitialized();
   await AppInitializer.initializeApp();
 
-  // Создаем провайдеры
   final settingsProvider = SettingsProvider();
 
   runApp(

@@ -3,19 +3,18 @@ import 'package:pomodoro_flutter/services/task_handler.dart';
 import 'package:workmanager/workmanager.dart';
 
 @pragma('vm:entry-point')
+void callbackDispatcher() {
+  print('Workmanager callbackDispatcher called');
+  Workmanager().executeTask((task, inputData) async {
+    print('Workmanager task executed: $task && $inputData');
+    await AppInitializer.initializeApp(isBackground: true);
+    return TaskHandler.executeTask(task, inputData);
+  });
+}
+
 class WorkmanagerService {
   static void initialize() {
-    print('WorkmanagerService.initialize called');
     Workmanager().initialize(callbackDispatcher, isInDebugMode: true);
-  }
-
-  @pragma('vm:entry-point')
-  static void callbackDispatcher() {
-    print('Workmanager callbackDispatcher called');
-    Workmanager().executeTask((task, inputData) async {
-      print('Workmanager task executed: $task');
-      await AppInitializer.initializeApp(isBackground: true);
-      return TaskHandler.executeTask(task, inputData);
-    });
+    print('WorkmanagerService.initialize called');
   }
 }

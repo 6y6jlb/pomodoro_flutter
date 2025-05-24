@@ -54,11 +54,14 @@ class ProcessingProvider with ChangeNotifier, WidgetsBindingObserver {
       _remainingTime = _processing.periodDurationInSeconds;
       _saveState();
 
-      if (_isAppActive) {
-        eventBus.emit(
-          NotificationFactory.createStateUpdateEvent(message: _processing.state.label(), withSound: withSound),
-        );
-      } else {
+      eventBus.emit(
+        NotificationFactory.createStateUpdateEvent(
+          message: _processing.state.label(),
+          withSound: _isAppActive && withSound,
+        ),
+      );
+
+      if (!_isAppActive) {
         print("changeState: app is not active");
         _processingService.scheduleTimerTask(_remainingTime);
       }
@@ -66,22 +69,26 @@ class ProcessingProvider with ChangeNotifier, WidgetsBindingObserver {
       var nextState = _processing.getNextProcessingState();
 
       print('changeState: startTimer: $_remainingTime, nextState: ${nextState.label()}');
-      _timerService.startTimer(
-        _remainingTime,
-        (time) => updateRemainingTime(time),
-        state.isInactive() ? () => {} : () => changeState(nextState, interactiveDelay: nextState.isRest()),
-      );
+      if (_isAppActive) {
+        _timerService.startTimer(
+          _remainingTime,
+          (time) => updateRemainingTime(time),
+          state.isInactive() ? () {} : () => changeState(nextState, interactiveDelay: nextState.isRest()),
+        );
+      }
       notifyListeners();
     }
 
-    print('interactiveDelay: $interactiveDelay');
-    if (interactiveDelay) {
-      eventBus.emit(NotificationFactory.creatSoundEvent());
+    if (_isAppActive && interactiveDelay && state.isRest()) {
+      print('Starting lazy confirmation for rest state');
       _delayedHandler(handlerCb, (withSound) {
         _processing = _processing.copyWithNewState(state);
         _saveState();
         eventBus.emit(
-          NotificationFactory.createStateUpdateEvent(message: ProcessingState.restDelay.label(), withSound: withSound),
+          NotificationFactory.createStateUpdateEvent(
+            message: ProcessingState.restDelay.label(),
+            withSound: _isAppActive && withSound,
+          ),
         );
         notifyListeners();
       }, I10n().t.delayedRestLabel);
@@ -111,11 +118,10 @@ class ProcessingProvider with ChangeNotifier, WidgetsBindingObserver {
       DelayedActionEvent(
         type: 'state_change',
         message: message,
-        confirmationAction: () => confirmationCallback(false),
-        cancellationAction: () => cancellationCallback(false),
+        confirmationAction: () => confirmationCallback(true),
+        cancellationAction: () => cancellationCallback(true),
       ),
     );
-    eventBus.emit(NotificationFactory.creatSoundEvent());
     _remainingTime = SettingsConstant.defaultRemaingDurationInSeconds;
     _timerService.stopTimer();
     _lazyConfirmationTimer?.cancel();
@@ -150,11 +156,14 @@ class ProcessingProvider with ChangeNotifier, WidgetsBindingObserver {
       '_loadState: remainingTime: $_remainingTime, state: ${_processing.state.label()}, nextState: $savedNextState',
     );
 
-    if (isRunning && _remainingTime > 0 && _processing.state != ProcessingState.inactivity) {
+    if (isRunning && _remainingTime > 0 && _processing.state != ProcessingState.inactivity && _isAppActive) {
       _timerService.startTimer(
         _remainingTime,
         (time) => updateRemainingTime(time),
-        () => changeState(_processing.getNextProcessingState(), interactiveDelay: true),
+        () => changeState(
+          _processing.getNextProcessingState(),
+          interactiveDelay: _processing.getNextProcessingState().isRest(),
+        ),
       );
     }
 

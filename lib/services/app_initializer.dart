@@ -5,6 +5,8 @@ import 'package:pomodoro_flutter/services/hive_service.dart';
 import 'package:pomodoro_flutter/services/workmanager_service.dart';
 
 class AppInitializer {
+  static bool _isWorkmanagerInitialized = false;
+
   static Future<void> initializeApp({bool isBackground = false}) async {
     if (!isBackground) {
       await _initializeForeground();
@@ -16,7 +18,10 @@ class AppInitializer {
     print('Foreground initialization');
     await Permission.notification.request();
     await initializeDateFormatting('ru_RU', null);
-    WorkmanagerService.initialize();
+    if (!_isWorkmanagerInitialized) {
+      WorkmanagerService.initialize();
+      _isWorkmanagerInitialized = true;
+    }
   }
 
   static Future<void> _initializeHive({bool isBackground = false}) async {

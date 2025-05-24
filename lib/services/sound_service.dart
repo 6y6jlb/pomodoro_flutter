@@ -18,6 +18,7 @@ class SoundService {
 
     try {
       await _audioPlayer.play(AssetSource(soundPath));
+      print('Playing sound: $soundPath');
     } catch (e) {
       print('Failed to play sound: $e');
     }

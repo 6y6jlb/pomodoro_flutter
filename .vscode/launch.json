@@ -8,17 +8,22 @@
         {
             "name": "pomodoro_flutter",
             "request": "launch",
+            "program": "lib/main.dart",
+            "args": ["--no-enable-impeller"],
             "type": "dart"
         },
         {
             "name": "pomodoro_flutter (profile mode)",
             "request": "launch",
+            "program": "lib/main.dart",
+            "args": ["--no-enable-impeller"],
             "type": "dart",
             "flutterMode": "profile"
         },
         {
             "name": "pomodoro_flutter (release mode)",
             "request": "launch",
+            "program": "lib/main.dart",
             "type": "dart",
             "flutterMode": "release"
         }
