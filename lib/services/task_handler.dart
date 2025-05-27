@@ -1,4 +1,3 @@
-import 'package:pomodoro_flutter/enums/processing_state.dart';
 import 'package:pomodoro_flutter/services/i_10n.dart';
 import 'package:pomodoro_flutter/services/notification_service.dart';
 import 'package:pomodoro_flutter/services/processing_service.dart';
@@ -9,28 +8,21 @@ import 'package:pomodoro_flutter/utils/consts/constant.dart';
 class TaskHandler {
   @pragma('vm:entry-point')
   static Future<bool> executeTask(String task, Map<String, dynamic>? inputData) async {
-    print('TaskHandler.executeTask: $task');
     try {
       final notificationService = NotificationService();
       await notificationService.init();
       final processingService = ProcessingService();
 
       if (task == AppConstants.pomodoroTimerTask) {
-        final remainingTime = await processingService.loadRemainingTime();
-        final isRunning = await processingService.loadTimerState();
-        final nextState = await processingService.loadNextProcessingState();
-        print('TaskHandler.executeTask: remainingTime: $remainingTime, isRunning: $isRunning, nextState: $nextState');
-        // Проверяем, активен ли таймер и не завершен ли он уже
-        if (isRunning && remainingTime > 0) {
-          await processingService.saveRemainingTime(0);
-          await processingService.saveTimerState(false);
-          await processingService.saveProcessingState(nextState);
-          await processingService.saveNextProcessingState(ProcessingState.inactivity.label());
+        final processing = await processingService.loadProcessing();
 
-          await notificationService.showNotification(
-            'Pomodoro Timer',
-             I10n().t.notification_stateChanged(nextState),
-          );
+        if (processing.isTimerRunning && processing.remainingTime > 0) {
+          final nextState = processing.getNextProcessingState();
+          final updatedProcessing = processing.copyWith(remainingTime: 0, isTimerRunning: false, state: nextState);
+
+          await processingService.saveProcessing(updatedProcessing);
+
+           await notificationService.showNotification('Pomodoro Timer', I10n().t.notification_stateChanged(nextState));
           VibrationService.vibrate(duration: 1000);
         }
       }

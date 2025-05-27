@@ -3,6 +3,7 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:pomodoro_flutter/services/hive_service.dart';
 import 'package:pomodoro_flutter/services/workmanager_service.dart';
+import 'package:pomodoro_flutter/utils/consts/constant.dart';
 
 class AppInitializer {
   static bool _isWorkmanagerInitialized = false;
@@ -29,7 +30,8 @@ class AppInitializer {
     if (!isBackground) {
       await HiveService.openBox('settings');
     }
-    await HiveService.openBox('timerState');
+    final timerBox = await HiveService.openBox(AppConstants.timerStateBox);
+    await timerBox.clear();
   }
 
   static Future<Box> openBox(String boxName) async {

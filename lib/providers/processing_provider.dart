@@ -1,20 +1,23 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:pomodoro_flutter/enums/processing_state.dart';
 import 'package:pomodoro_flutter/event_bus/event_bus_provider.dart';
 import 'package:pomodoro_flutter/events/delayed_action_event.dart';
 import 'package:pomodoro_flutter/factories/notification_factory.dart';
+import 'package:pomodoro_flutter/models/pomodoro_settings.dart';
 import 'package:pomodoro_flutter/models/processing.dart';
 import 'package:pomodoro_flutter/services/i_10n.dart';
 import 'package:pomodoro_flutter/services/processing_service.dart';
 import 'package:pomodoro_flutter/services/processing_timer_service.dart';
 import 'package:pomodoro_flutter/utils/consts/settings_constant.dart';
-import '../models/pomodoro_settings.dart';
 
 class ProcessingProvider with ChangeNotifier, WidgetsBindingObserver {
-  Processing _processing = Processing(state: ProcessingState.inactivity);
-  PomodoroSettings? settings;
-  int _remainingTime = SettingsConstant.defaultRemaingDurationInSeconds;
+  Processing _processing = Processing(
+    state: ProcessingState.inactivity,
+    remainingTime: SettingsConstant.defaultRemaingDurationInSeconds,
+    isTimerRunning: false,
+  );
   bool _isAppActive = true;
   Timer? _lazyConfirmationTimer;
   final ProcessingService _processingService = ProcessingService();
@@ -24,34 +27,39 @@ class ProcessingProvider with ChangeNotifier, WidgetsBindingObserver {
     WidgetsBinding.instance.addObserver(this);
     if (settings != null) {
       updateSettings(settings);
-    } else {
-      _processing = Processing(state: ProcessingState.inactivity);
     }
     _loadState();
   }
 
   Processing get processing => _processing;
-  int get remainingTime => _remainingTime;
+  PomodoroSettings? get settings => _processing.settings;
+  int get remainingTime => _processing.remainingTime;
   bool get isAppActive => _isAppActive;
 
   void updateSettings(PomodoroSettings newSettings) {
-    settings = newSettings;
-    _processing = Processing(settings: settings!, state: ProcessingState.inactivity);
-    _remainingTime = newSettings.currentSessionDurationInSeconds;
+    _processing = _processing.copyWithNewSettings(newSettings);
+    _processing = _processing.copyWith(
+      state: ProcessingState.inactivity,
+      remainingTime: newSettings.currentSessionDurationInSeconds,
+      isTimerRunning: false,
+    );
     _saveState();
     notifyListeners();
   }
 
   void updateRemainingTime(int newRemainingTime) {
-    _remainingTime = newRemainingTime;
+    _processing = _processing.copyWith(remainingTime: newRemainingTime);
     notifyListeners();
   }
 
   void changeState(ProcessingState state, {bool interactiveDelay = false}) {
     print('changeState: state - ${state.label()}, interactiveDelay - $interactiveDelay');
     void handlerCb(bool withSound) {
-      _processing = _processing.copyWithNewState(state);
-      _remainingTime = _processing.periodDurationInSeconds;
+      _processing = _processing.copyWith(
+        state: state,
+        remainingTime: _processing.periodDurationInSeconds,
+        isTimerRunning: true,
+      );
       _saveState();
 
       eventBus.emit(
@@ -63,15 +71,15 @@ class ProcessingProvider with ChangeNotifier, WidgetsBindingObserver {
 
       if (!_isAppActive) {
         print("changeState: app is not active");
-        _processingService.scheduleTimerTask(_remainingTime);
+        _processingService.scheduleTimerTask(_processing.remainingTime);
       }
 
       var nextState = _processing.getNextProcessingState();
 
-      print('changeState: startTimer: $_remainingTime, nextState: ${nextState.label()}');
+      print('changeState: startTimer: ${_processing.remainingTime}, nextState: ${nextState.label()}');
       if (_isAppActive) {
         _timerService.startTimer(
-          _remainingTime,
+          _processing.remainingTime,
           (time) => updateRemainingTime(time),
           state.isInactive() ? () {} : () => changeState(nextState, interactiveDelay: nextState.isRest()),
         );
@@ -82,7 +90,7 @@ class ProcessingProvider with ChangeNotifier, WidgetsBindingObserver {
     if (_isAppActive && interactiveDelay && state.isRest()) {
       print('Starting lazy confirmation for rest state');
       _delayedHandler(handlerCb, (withSound) {
-        _processing = _processing.copyWithNewState(state);
+        _processing = _processing.copyWith(state: state);
         _saveState();
         eventBus.emit(
           NotificationFactory.createStateUpdateEvent(
@@ -101,8 +109,7 @@ class ProcessingProvider with ChangeNotifier, WidgetsBindingObserver {
     print('resetTimer');
     _lazyConfirmationTimer?.cancel();
     _timerService.stopTimer();
-    _remainingTime = 0;
-    _processing = _processing.copyWithNewState(ProcessingState.inactivity);
+    _processing = _processing.copyWith(state: ProcessingState.inactivity, remainingTime: 0, isTimerRunning: false);
     _saveState();
     _processingService.cancelTimerTask();
     notifyListeners();
@@ -122,13 +129,16 @@ class ProcessingProvider with ChangeNotifier, WidgetsBindingObserver {
         cancellationAction: () => cancellationCallback(true),
       ),
     );
-    _remainingTime = SettingsConstant.defaultRemaingDurationInSeconds;
+    _processing = _processing.copyWith(
+      remainingTime: SettingsConstant.defaultRemaingDurationInSeconds,
+      isTimerRunning: false,
+    );
     _timerService.stopTimer();
     _lazyConfirmationTimer?.cancel();
     _lazyConfirmationTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      _remainingTime--;
+      _processing = _processing.copyWith(remainingTime: _processing.remainingTime - 1);
 
-      if (_remainingTime <= 0) {
+      if (_processing.remainingTime <= 0) {
         timer.cancel();
         confirmationCallback(true);
       }
@@ -140,25 +150,20 @@ class ProcessingProvider with ChangeNotifier, WidgetsBindingObserver {
 
   Future<void> _loadState() async {
     await _timerService.loadState();
-    _remainingTime = _timerService.remainingTime;
-    final savedState = await _processingService.loadProcessingState();
-    final savedNextState = await _processingService.loadNextProcessingState();
-    final isRunning = await _processingService.loadTimerState();
-
-    _processing = _processing.copyWithNewState(
-      ProcessingState.values.firstWhere(
-        (state) => state.label() == savedState,
-        orElse: () => ProcessingState.inactivity,
-      ),
-    );
+    _processing = await _processingService.loadProcessing();
 
     print(
-      '_loadState: remainingTime: $_remainingTime, state: ${_processing.state.label()}, nextState: $savedNextState',
+      '_loadState: remainingTime: ${_processing.remainingTime}, '
+      'state: ${_processing.state.label()}, '
+      'isTimerRunning: ${_processing.isTimerRunning}',
     );
 
-    if (isRunning && _remainingTime > 0 && _processing.state != ProcessingState.inactivity && _isAppActive) {
+    if (_processing.isTimerRunning &&
+        _processing.remainingTime > 0 &&
+        _processing.state != ProcessingState.inactivity &&
+        _isAppActive) {
       _timerService.startTimer(
-        _remainingTime,
+        _processing.remainingTime,
         (time) => updateRemainingTime(time),
         () => changeState(
           _processing.getNextProcessingState(),
@@ -171,10 +176,7 @@ class ProcessingProvider with ChangeNotifier, WidgetsBindingObserver {
   }
 
   Future<void> _saveState() async {
-    await _processingService.saveRemainingTime(_remainingTime);
-    await _processingService.saveProcessingState(_processing.state.label());
-    await _processingService.saveNextProcessingState(_processing.getNextProcessingState().label());
-    await _processingService.saveTimerState(_remainingTime > 0);
+    await _processingService.saveProcessing(_processing);
   }
 
   @override
@@ -187,8 +189,8 @@ class ProcessingProvider with ChangeNotifier, WidgetsBindingObserver {
       _processingService.cancelTimerTask();
     } else {
       _saveState();
-      if (_remainingTime > 0) {
-        _processingService.scheduleTimerTask(_remainingTime);
+      if (_processing.remainingTime > 0 && _processing.isTimerRunning) {
+        _processingService.scheduleTimerTask(_processing.remainingTime);
       }
     }
   }

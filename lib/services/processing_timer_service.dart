@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:pomodoro_flutter/services/processing_service.dart';
 import 'package:pomodoro_flutter/utils/consts/settings_constant.dart';
 
@@ -14,31 +15,33 @@ class ProcessingTimerService {
     _remainingTime = durationInSeconds;
     _onTick = onTick;
     _mainTimer?.cancel();
-    _mainTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+    _mainTimer = Timer.periodic(const Duration(seconds: 1), (timer) async {
       if (_remainingTime > 0) {
         _remainingTime--;
         if (_remainingTime % 5 == 0 || _remainingTime == 0) {
-          _processingService.saveRemainingTime(_remainingTime);
+          final processing = await _processingService.loadProcessing();
+          await _processingService.saveProcessing(
+            processing.copyWith(remainingTime: _remainingTime, isTimerRunning: true),
+          );
         }
         _onTick?.call(_remainingTime);
       } else {
         timer.cancel();
-        _processingService.saveTimerState(false);
+        final processing = await _processingService.loadProcessing();
+        await _processingService.saveProcessing(processing.copyWith(remainingTime: 0, isTimerRunning: false));
         onComplete();
       }
     });
-    _processingService.saveTimerState(true);
   }
 
   void stopTimer() {
     _mainTimer?.cancel();
     _remainingTime = 0;
-    _processingService.saveRemainingTime(_remainingTime);
-    _processingService.saveTimerState(false);
   }
 
   Future<void> loadState() async {
-    _remainingTime = await _processingService.loadRemainingTime();
+    final processing = await _processingService.loadProcessing();
+    _remainingTime = processing.remainingTime;
   }
 
   void dispose() {

@@ -1,6 +1,7 @@
 import 'package:hive_flutter/adapters.dart';
 import 'package:pomodoro_flutter/enums/pomodoro_mode_adapter.dart';
 import 'package:pomodoro_flutter/models/pomodoro_settings.dart';
+import 'package:pomodoro_flutter/models/processing.dart';
 import 'package:pomodoro_flutter/models/schedule.dart';
 import 'package:pomodoro_flutter/utils/datetime/time_period.dart';
 
@@ -12,6 +13,7 @@ class HiveService {
     Hive.registerAdapter(TimeOfDayAdapter());
     Hive.registerAdapter(ScheduleAdapter());
     Hive.registerAdapter(PomodoroSettingsAdapter());
+    Hive.registerAdapter(ProcessingAdapter());
   }
 
   static Future<Box> openBox(String boxName) async {
