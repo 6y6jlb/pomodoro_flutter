@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import 'package:pomodoro_flutter/utils/consts/hive_type_id.dart';
 
 part 'time_period.g.dart';
 
-@HiveType(typeId: 0)
+@HiveType(typeId: HiveTypeId.timePeriod)
 class TimePeriod {
   @HiveField(0)
   final TimeOfDay start;

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:pomodoro_flutter/enums/processing_state.dart';
@@ -19,9 +20,9 @@ class ProcessingProvider with ChangeNotifier, WidgetsBindingObserver {
     isTimerRunning: false,
   );
   bool _isAppActive = true;
-  Timer? _lazyConfirmationTimer;
+  Timer? _interactiveDelayTimer;
   final ProcessingService _processingService = ProcessingService();
-  final ProcessingTimerService _timerService = ProcessingTimerService();
+  final ProcessingTimerService _processingTimerService = ProcessingTimerService();
 
   ProcessingProvider([PomodoroSettings? settings]) {
     WidgetsBinding.instance.addObserver(this);
@@ -52,8 +53,8 @@ class ProcessingProvider with ChangeNotifier, WidgetsBindingObserver {
     notifyListeners();
   }
 
-  void changeState(ProcessingState state, {bool interactiveDelay = false}) {
-    print('changeState: state - ${state.label()}, interactiveDelay - $interactiveDelay');
+  void changeState(ProcessingState state, {bool shouldDelay = false}) {
+    print('changeState: state - ${state.label()}, interactiveDelay - $shouldDelay');
     void handlerCb(bool withSound) {
       _processing = _processing.copyWith(
         state: state,
@@ -62,53 +63,53 @@ class ProcessingProvider with ChangeNotifier, WidgetsBindingObserver {
       );
       _saveState();
 
-      eventBus.emit(
-        NotificationFactory.createStateUpdateEvent(
-          message: _processing.state.label(),
-          withSound: _isAppActive && withSound,
-        ),
-      );
-
-      if (!_isAppActive) {
-        print("changeState: app is not active");
-        _processingService.scheduleTimerTask(_processing.remainingTime);
-      }
-
       var nextState = _processing.getNextProcessingState();
+      print('nextState: ${nextState.label()}');
+      print('app is active: $_isAppActive');
 
-      print('changeState: startTimer: ${_processing.remainingTime}, nextState: ${nextState.label()}');
       if (_isAppActive) {
-        _timerService.startTimer(
-          _processing.remainingTime,
-          (time) => updateRemainingTime(time),
-          state.isInactive() ? () {} : () => changeState(nextState, interactiveDelay: nextState.isRest()),
-        );
-      }
-      notifyListeners();
-    }
-
-    if (_isAppActive && interactiveDelay && state.isRest()) {
-      print('Starting lazy confirmation for rest state');
-      _delayedHandler(handlerCb, (withSound) {
-        _processing = _processing.copyWith(state: state);
-        _saveState();
         eventBus.emit(
           NotificationFactory.createStateUpdateEvent(
-            message: ProcessingState.restDelay.label(),
+            message: _processing.state.label(),
             withSound: _isAppActive && withSound,
           ),
         );
-        notifyListeners();
-      }, I10n().t.delayedRestLabel);
+        _processingTimerService.startTimer(
+          _processing.remainingTime,
+          (time) => updateRemainingTime(time),
+          state.isInactive() ? () {} : () => changeState(nextState, shouldDelay: nextState.isRest()),
+        );
+      } else {
+        _processingService.scheduleTimerTask(_processing.remainingTime);
+      }
+
+      notifyListeners();
+    }
+
+    if (_isAppActive) {
+      if (shouldDelay) {
+        print('shouldDelay, starting lazy confirmation');
+        _delayedHandler(handlerCb, (withSound) {
+          _processing = _processing.copyWith(state: state);
+          _saveState();
+          eventBus.emit(NotificationFactory.createStateUpdateEvent(message: state.label(), withSound: withSound));
+          notifyListeners();
+        }, I10n().t.delayedRestLabel);
+      } else {
+        print('Immediate state change without delay');
+        handlerCb(false);
+      }
+      notifyListeners();
     } else {
+      print('App is not active, skipping state change');
       handlerCb(false);
     }
   }
 
   void resetTimer() {
     print('resetTimer');
-    _lazyConfirmationTimer?.cancel();
-    _timerService.stopTimer();
+    _interactiveDelayTimer?.cancel();
+    _processingTimerService.stopTimer();
     _processing = _processing.copyWith(state: ProcessingState.inactivity, remainingTime: 0, isTimerRunning: false);
     _saveState();
     _processingService.cancelTimerTask();
@@ -133,9 +134,9 @@ class ProcessingProvider with ChangeNotifier, WidgetsBindingObserver {
       remainingTime: SettingsConstant.defaultRemaingDurationInSeconds,
       isTimerRunning: false,
     );
-    _timerService.stopTimer();
-    _lazyConfirmationTimer?.cancel();
-    _lazyConfirmationTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+    _processingTimerService.stopTimer();
+    _interactiveDelayTimer?.cancel();
+    _interactiveDelayTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
       _processing = _processing.copyWith(remainingTime: _processing.remainingTime - 1);
 
       if (_processing.remainingTime <= 0) {
@@ -149,7 +150,7 @@ class ProcessingProvider with ChangeNotifier, WidgetsBindingObserver {
   }
 
   Future<void> _loadState() async {
-    await _timerService.loadState();
+    await _processingTimerService.loadState();
     _processing = await _processingService.loadProcessing();
 
     print(
@@ -162,12 +163,12 @@ class ProcessingProvider with ChangeNotifier, WidgetsBindingObserver {
         _processing.remainingTime > 0 &&
         _processing.state != ProcessingState.inactivity &&
         _isAppActive) {
-      _timerService.startTimer(
+      _processingTimerService.startTimer(
         _processing.remainingTime,
         (time) => updateRemainingTime(time),
         () => changeState(
           _processing.getNextProcessingState(),
-          interactiveDelay: _processing.getNextProcessingState().isRest(),
+          shouldDelay: _processing.getNextProcessingState().isRest(),
         ),
       );
     }
@@ -198,8 +199,8 @@ class ProcessingProvider with ChangeNotifier, WidgetsBindingObserver {
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
-    _lazyConfirmationTimer?.cancel();
-    _timerService.dispose();
+    _interactiveDelayTimer?.cancel();
+    _processingTimerService.dispose();
     super.dispose();
   }
 }

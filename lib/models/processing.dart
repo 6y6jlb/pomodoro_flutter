@@ -1,11 +1,12 @@
 import 'package:hive/hive.dart';
 import 'package:pomodoro_flutter/enums/processing_state.dart';
 import 'package:pomodoro_flutter/models/pomodoro_settings.dart';
+import 'package:pomodoro_flutter/utils/consts/hive_type_id.dart';
 import 'package:pomodoro_flutter/utils/consts/settings_constant.dart';
 
 part 'processing.g.dart';
 
-@HiveType(typeId: 3)
+@HiveType(typeId: HiveTypeId.processing)
 class Processing {
   @HiveField(0)
   final ProcessingState state;

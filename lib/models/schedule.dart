@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:pomodoro_flutter/exceptions/no_active_days_exception.dart';
+import 'package:pomodoro_flutter/utils/consts/hive_type_id.dart';
 import 'package:pomodoro_flutter/utils/consts/settings_constant.dart';
 import 'package:pomodoro_flutter/utils/datetime/time_period.dart';
 
 part 'schedule.g.dart';
 
-@HiveType(typeId: 1)
+@HiveType(typeId: HiveTypeId.schedule)
 class Schedule {
   @HiveField(0)
   final List<int> activeDaysOfWeek;
